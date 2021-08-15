@@ -79,7 +79,7 @@ public class UserProvider {
         }
 
         if(postLoginReq.getPassword().equals(password)){
-            int userIdx = userDao.getPwd(postLoginReq).getUserIdx();
+            int userIdx = userDao.getPwd(postLoginReq).getIdx();
             String jwt = jwtService.createJwt(userIdx);
             return new PostLoginRes(userIdx,jwt);
         }

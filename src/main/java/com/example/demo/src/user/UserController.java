@@ -1,5 +1,10 @@
 package com.example.demo.src.user;
 
+import com.example.demo.config.BaseResponseStatus;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
@@ -7,8 +12,18 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -36,26 +51,25 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
+
+
     /**
      * 회원 조회 API
      * [GET] /users
      * 회원 번호 및 이메일 검색 조회 API
-     * [GET] /users? Email=
+     * [GET] /users?userIdx= && Email=
      * @return BaseResponse<List<GetUserRes>>
      */
     //Query String
     @ResponseBody
     @GetMapping("") // (GET) 127.0.0.1:9000/app/users
-    public BaseResponse<List<GetUserRes>> getUsers(@RequestParam(required = false) String Email) {
-        try{
-            if(Email == null){
-                List<GetUserRes> getUsersRes = userProvider.getUsers();
-                return new BaseResponse<>(getUsersRes);
-            }
+    public BaseResponse<List<GetUserRes>> getUsers() {
+        try {
             // Get Users
-            List<GetUserRes> getUsersRes = userProvider.getUsersByEmail(Email);
+            List<GetUserRes> getUsersRes = userProvider.getUsers();
             return new BaseResponse<>(getUsersRes);
-        } catch(BaseException exception){
+        }
+        catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
@@ -66,18 +80,13 @@ public class UserController {
      * @return BaseResponse<GetUserRes>
      */
     // Path-variable
-    @ResponseBody
-    @GetMapping("/{userIdx}") // (GET) 127.0.0.1:9000/app/users/:userIdx
-    public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") int userIdx) {
-        // Get Users
-        try{
-            GetUserRes getUserRes = userProvider.getUser(userIdx);
-            return new BaseResponse<>(getUserRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
-
-    }
+//    @ResponseBody
+//    @GetMapping("/{userIdx}") // (GET) 127.0.0.1:9000/app/users/:userIdx
+//    public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") int userIdx) {
+//        // Get Users
+////        GetUserRes getUserRes = userProvider.getUser(userIdx);
+//        return new BaseResponse<>(getUserRes);
+//    }
 
     /**
      * 회원가입 API
@@ -87,15 +96,21 @@ public class UserController {
     // Body
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
-        // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
+    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) throws BaseException {
         if(postUserReq.getEmail() == null){
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
+        if(postUserReq.getPhoneNum().length()!=11) {
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE);
         }
         //이메일 정규표현
         if(!isRegexEmail(postUserReq.getEmail())){
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
+        if(postUserReq.getUserName().length()>20) {
+            return new BaseResponse<>(POST_USERS_INVALID_NAME);
+        }
+
         try{
             PostUserRes postUserRes = userService.createUser(postUserReq);
             return new BaseResponse<>(postUserRes);
@@ -103,6 +118,7 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
     /**
      * 로그인 API
      * [POST] /users/logIn
@@ -112,8 +128,6 @@ public class UserController {
     @PostMapping("/logIn")
     public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
         try{
-            // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
-            // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
             PostLoginRes postLoginRes = userProvider.logIn(postLoginReq);
             return new BaseResponse<>(postLoginRes);
         } catch (BaseException exception){
@@ -128,20 +142,20 @@ public class UserController {
      */
     @ResponseBody
     @PatchMapping("/{userIdx}")
-    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") int userIdx, @RequestBody User user){
+    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserReq user){
         try {
             //jwt에서 idx 추출.
             int userIdxByJwt = jwtService.getUserIdx();
             //userIdx와 접근한 유저가 같은지 확인
             if(userIdx != userIdxByJwt){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
             //같다면 유저네임 변경
-            PatchUserReq patchUserReq = new PatchUserReq(userIdx,user.getUserName());
+            PatchUserReq patchUserReq = new PatchUserReq(user.getUserIdx(), user.getUserName());
             userService.modifyUserName(patchUserReq);
 
-            String result = "";
-        return new BaseResponse<>(result);
+            String result = "Success";
+            return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
