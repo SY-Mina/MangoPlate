@@ -181,4 +181,107 @@ public class UserController {
     }
 
 
+    /**
+     * 카카오 로그인 API
+     * [GET] /users/login/kakao
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @GetMapping("/login/kakao")
+    public BaseResponse<String> loginKakao(String code){
+        //code: 토큰 받기 요청을 위한 인증 코드
+
+        //test
+        //POST로 카카오에 요청
+        RestTemplate rt = new RestTemplate();
+        //Header
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        //Body
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", "c542e13c92062485564e91d141795de5");
+        params.add("redirect_uri", "https://minaserver.shop/app/users/login/kakao");
+        params.add("code", code);
+
+        HttpEntity<MultiValueMap<String, String>> kakaoRequest =
+                new HttpEntity<>(params, headers);
+
+        ResponseEntity<String> response = rt.exchange(
+                "https://kauth.kakao.com/oauth/token",
+                HttpMethod.POST, kakaoRequest, String.class
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        KakaoUser oAuthToken = new KakaoUser();
+        try {
+            oAuthToken = objectMapper.readValue(response.getBody(), KakaoUser.class);
+        } catch (JsonMappingException e){
+            e.printStackTrace();
+        } catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
+
+        System.out.println(oAuthToken.getToken_type() + " " + oAuthToken.getAccess_token());
+
+        // 받은 토큰값에 따라 사용자 정보 가져오기
+        RestTemplate rt2 = new RestTemplate();
+
+        // HttpHeader 오브젝트 생성
+        HttpHeaders headers2 = new HttpHeaders();
+        headers2.add("Authorization", "Bearer "+oAuthToken.getAccess_token());
+        headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
+        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest2 =
+                new HttpEntity<>(headers2);
+
+        // Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.
+        ResponseEntity<String> response2 = rt2.exchange(
+                "https://kapi.kakao.com/v2/user/me",
+                HttpMethod.POST,
+                kakaoProfileRequest2,
+                String.class
+        );
+        System.out.println(response2.getBody());
+
+        ObjectMapper objectMapper2 = new ObjectMapper();
+        KakaoUserInfo kakaoUserInfo = new KakaoUserInfo();
+        try {
+            kakaoUserInfo = objectMapper2.readValue(response2.getBody(), KakaoUserInfo.class);
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        // 카카오 로그인한 유저가 존재한다면
+        if (userService.checkKakaoUserExist(kakaoUserInfo.getProperties().getNickname(),
+                kakaoUserInfo.getKakao_account().getEmail())==1) {
+            try {
+                System.out.println("존재");
+                String jwt = userService.loginKakaoUser(kakaoUserInfo.getProperties().getNickname(),
+                        kakaoUserInfo.getKakao_account().getEmail());
+                return new BaseResponse<>(jwt);
+            } catch (BaseException exception){
+                return new BaseResponse<>((exception.getStatus()));
+            }
+
+        }
+        else {
+            try{
+                System.out.println("로그인 없음");
+                userService.createKakaoUser(kakaoUserInfo.getProperties().getNickname(),
+                        kakaoUserInfo.getKakao_account().getEmail());
+                String result = kakaoUserInfo.getProperties().getNickname() + " 로그인 완료";
+                return new BaseResponse<>(result);
+
+            } catch (BaseException exception){
+                return new BaseResponse<>((exception.getStatus()));
+            }
+
+        }
+
+    }
 }

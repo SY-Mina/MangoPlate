@@ -20,33 +20,35 @@ public class UserDao {
     }
 
     public List<GetUserRes> getUsers(){
-        String getUsersQuery = "select User.idx as userIdx, userName,\\n\" +\n" +
-                "                \"    profImg,\\n\" +\n" +
-                "                \"        (select COUNT(Follow.idx)\\n\" +\n" +
-                "                \"           from Follow\\n\" +\n" +
-                "                \"           where Follow.followIdx=User.idx) as follower,\\n\" +\n" +
-                "                \"        (select COUNT(Follow.idx)\\n\" +\n" +
-                "                \"           from Follow\\n\" +\n" +
-                "                \"           where Follow.userIdx=User.idx) as following,\\n\" +\n" +
-                "                \"        (select COUNT(Review.idx)\\n\" +\n" +
-                "                \"            from Review\\n\" +\n" +
-                "                \"            where Review.userIdx=User.idx) as reviews,\\n\" +\n" +
-                "                \"        (select COUNT(Went.idx)\\n\" +\n" +
-                "                \"            from Went\\n\" +\n" +
-                "                \"            where Went.userIdx=User.idx) as went,\\n\" +\n" +
-                "                \"        (select COUNT(Review.idx)\\n\" +\n" +
-                "                \"            from Review inner join ReviewImage\\n\" +\n" +
-                "                \"            where Review.userIdx=User.idx and ReviewImage.reviewIdx=Review.idx) as photos,\\n\" +\n" +
-                "                \"        (select COUNT(Wish.idx)\\n\" +\n" +
-                "                \"            from Wish\\n\" +\n" +
-                "                \"            where Wish.userIdx=User.idx) as wish\\n\" +\n" +
-                "                \"from User\\n\" +\n" +
-                "                \"where User.idx=?;";
+        String getUsersQuery = "select User.idx as userIdx, userName,\n" +
+                "    profImg, User.email, User.phoneNum,\n" +
+                "        (select COUNT(Follow.idx)\n" +
+                "           from Follow\n" +
+                "           where Follow.followIdx=User.idx) as follower,\n" +
+                "        (select COUNT(Follow.idx)\n" +
+                "           from Follow\n" +
+                "           where Follow.userIdx=User.idx) as following,\n" +
+                "        (select COUNT(Review.idx)\n" +
+                "            from Review\n" +
+                "            where Review.userIdx=User.idx) as reviews,\n" +
+                "        (select COUNT(Went.idx)\n" +
+                "            from Went\n" +
+                "            where Went.userIdx=User.idx) as went,\n" +
+                "        (select COUNT(Review.idx)\n" +
+                "            from Review inner join ReviewImage\n" +
+                "            where Review.userIdx=User.idx and ReviewImage.reviewIdx=Review.idx) as photos,\n" +
+                "        (select COUNT(Wish.idx)\n" +
+                "            from Wish\n" +
+                "            where Wish.userIdx=User.idx) as wish\n" +
+                "from User\n" +
+                "where User.idx=3;";
         return this.jdbcTemplate.query(getUsersQuery,
                 (rs,rowNum) -> new GetUserRes(
                         rs.getInt("userIdx"),
                         rs.getString("userName"),
                         rs.getString("profImg"),
+                        rs.getString("email"),
+                        rs.getString("phoneNum"),
                         rs.getInt("follower"),
                         rs.getInt("following"),
                         rs.getInt("reviews"),
@@ -71,7 +73,7 @@ public class UserDao {
 
     public GetUserRes getUser(int userIdx){
         String getUserQuery = "select User.idx as userIdx, userName,\n" +
-                "    profImg,\n" +
+                "    profImg, User.email, User.phoneNum,\n" +
                 "        (select COUNT(Follow.idx)\n" +
                 "           from Follow\n" +
                 "           where Follow.followIdx=User.idx) as follower,\n" +
@@ -97,6 +99,8 @@ public class UserDao {
                         rs.getInt("userIdx"),
                         rs.getString("userName"),
                         rs.getString("profImg"),
+                        rs.getString("email"),
+                        rs.getString("phoneNum"),
                         rs.getInt("follower"),
                         rs.getInt("following"),
                         rs.getInt("reviews"),
@@ -148,6 +152,23 @@ public class UserDao {
 
     }
 
+    public int checkKakaoUserExist (String nickname, String email) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from User where userName=? and email=?);",
+                int.class, nickname, email);
+    }
 
+    public int getKakaoUser(String nickname, String email){
 
+        return this.jdbcTemplate.queryForObject("select idx from User where userName = ? and email=?",
+                int.class, nickname, email);
+
+    }
+
+    public int createKakaoUser(String nickname, String email){
+        String kakaoPwd = "kakao";
+        this.jdbcTemplate.update("insert into User (userName, email, password) VALUES (?,?,?)",
+                new Object[]{nickname, email, kakaoPwd}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
 }

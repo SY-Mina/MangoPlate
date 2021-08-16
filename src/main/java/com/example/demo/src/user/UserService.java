@@ -70,4 +70,34 @@ public class UserService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int checkKakaoUserExist(String nickname, String email){
+        int exist = userDao.checkKakaoUserExist(nickname, email);
+        return exist;
+    }
+
+    public String loginKakaoUser(String nickname, String email) throws BaseException {
+        try {
+            int userIdx = userDao.getKakaoUser(nickname, email);
+            String jwt = jwtService.createJwt(userIdx);
+            return jwt;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+    public PostLoginRes createKakaoUser(String nickname, String email) throws BaseException {
+
+        try {
+            int userIdx = userDao.createKakaoUser(nickname, email);
+            String jwt = jwtService.createJwt(userIdx);
+            return new PostLoginRes(userIdx, jwt);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+
+    }
 }
