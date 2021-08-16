@@ -11,7 +11,11 @@ import lombok.Setter;
 public class GetUserRes {
     private int userIdx;
     private String userName;
-    private String ID;
-    private String email;
-    private String password;
+    private String profImg;
+    private int follower;
+    private int following;
+    private int reviews;
+    private int went;
+    private int photos;
+    private int wish;
 }

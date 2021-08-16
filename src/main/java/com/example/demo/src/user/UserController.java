@@ -61,32 +61,45 @@ public class UserController {
      * @return BaseResponse<List<GetUserRes>>
      */
     //Query String
-    @ResponseBody
-    @GetMapping("") // (GET) 127.0.0.1:9000/app/users
-    public BaseResponse<List<GetUserRes>> getUsers() {
-        try {
-            // Get Users
-            List<GetUserRes> getUsersRes = userProvider.getUsers();
-            return new BaseResponse<>(getUsersRes);
-        }
-        catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
+//    @ResponseBody
+//    @GetMapping("") // (GET) 127.0.0.1:9000/app/users
+//    public BaseResponse<List<GetUserRes>> getUsers() {
+//        try {
+//            // Get Users
+//            List<GetUserRes> getUsersRes = userProvider.getUsers();
+//            return new BaseResponse<>(getUsersRes);
+//        }
+//        catch (BaseException exception) {
+//            return new BaseResponse<>((exception.getStatus()));
+//        }
+//    }
 
     /**
-     * 회원 1명 조회 API
-     * [GET] /users/:userIdx
+     * 내 정보 조회 API
+     * [GET] /users
      * @return BaseResponse<GetUserRes>
      */
     // Path-variable
-//    @ResponseBody
-//    @GetMapping("/{userIdx}") // (GET) 127.0.0.1:9000/app/users/:userIdx
-//    public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") int userIdx) {
-//        // Get Users
-////        GetUserRes getUserRes = userProvider.getUser(userIdx);
-//        return new BaseResponse<>(getUserRes);
-//    }
+    @ResponseBody
+    @GetMapping("") // (GET) 127.0.0.1:9000/app/users
+    public BaseResponse<GetUserRes> getUser() {
+        // Get Users
+        try{
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+                System.out.println("userIdx: " + userIdx);
+                GetUserRes getUserRes = userProvider.getUser(userIdx);
+                return new BaseResponse<>(getUserRes);
+            }
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
 
     /**
      * 회원가입 API
@@ -127,6 +140,12 @@ public class UserController {
     @ResponseBody
     @PostMapping("/logIn")
     public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
+        if (postLoginReq.getEmail().length()<1) {
+            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
+        if (postLoginReq.getPassword().length()<6 && postLoginReq.getPassword().length()>20) {
+            return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
+        }
         try{
             PostLoginRes postLoginRes = userProvider.logIn(postLoginReq);
             return new BaseResponse<>(postLoginRes);

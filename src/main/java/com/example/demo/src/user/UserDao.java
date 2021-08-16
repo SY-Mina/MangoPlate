@@ -20,41 +20,90 @@ public class UserDao {
     }
 
     public List<GetUserRes> getUsers(){
-        String getUsersQuery = "select * from User";
+        String getUsersQuery = "select User.idx as userIdx, userName,\\n\" +\n" +
+                "                \"    profImg,\\n\" +\n" +
+                "                \"        (select COUNT(Follow.idx)\\n\" +\n" +
+                "                \"           from Follow\\n\" +\n" +
+                "                \"           where Follow.followIdx=User.idx) as follower,\\n\" +\n" +
+                "                \"        (select COUNT(Follow.idx)\\n\" +\n" +
+                "                \"           from Follow\\n\" +\n" +
+                "                \"           where Follow.userIdx=User.idx) as following,\\n\" +\n" +
+                "                \"        (select COUNT(Review.idx)\\n\" +\n" +
+                "                \"            from Review\\n\" +\n" +
+                "                \"            where Review.userIdx=User.idx) as reviews,\\n\" +\n" +
+                "                \"        (select COUNT(Went.idx)\\n\" +\n" +
+                "                \"            from Went\\n\" +\n" +
+                "                \"            where Went.userIdx=User.idx) as went,\\n\" +\n" +
+                "                \"        (select COUNT(Review.idx)\\n\" +\n" +
+                "                \"            from Review inner join ReviewImage\\n\" +\n" +
+                "                \"            where Review.userIdx=User.idx and ReviewImage.reviewIdx=Review.idx) as photos,\\n\" +\n" +
+                "                \"        (select COUNT(Wish.idx)\\n\" +\n" +
+                "                \"            from Wish\\n\" +\n" +
+                "                \"            where Wish.userIdx=User.idx) as wish\\n\" +\n" +
+                "                \"from User\\n\" +\n" +
+                "                \"where User.idx=?;";
         return this.jdbcTemplate.query(getUsersQuery,
                 (rs,rowNum) -> new GetUserRes(
                         rs.getInt("userIdx"),
                         rs.getString("userName"),
-                        rs.getString("ID"),
-                        rs.getString("Email"),
-                        rs.getString("password"))
+                        rs.getString("profImg"),
+                        rs.getInt("follower"),
+                        rs.getInt("following"),
+                        rs.getInt("reviews"),
+                        rs.getInt("went"),
+                        rs.getInt("photos"),
+                        rs.getInt("wish"))
                 );
     }
 
-    public List<GetUserRes> getUsersByEmail(String email){
-        String getUsersByEmailQuery = "select * from User where email =?";
-        String getUsersByEmailParams = email;
-        return this.jdbcTemplate.query(getUsersByEmailQuery,
-                (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
-                        rs.getString("userName"),
-                        rs.getString("ID"),
-                        rs.getString("Email"),
-                        rs.getString("password")),
-                getUsersByEmailParams);
-    }
+//    public List<GetUserRes> getUsersByEmail(String email){
+//        String getUsersByEmailQuery = "select * from User where email =?";
+//        String getUsersByEmailParams = email;
+//        return this.jdbcTemplate.query(getUsersByEmailQuery,
+//                (rs, rowNum) -> new GetUserRes(
+//                        rs.getInt("userIdx"),
+//                        rs.getString("userName"),
+//                        rs.getString("ID"),
+//                        rs.getString("Email"),
+//                        rs.getString("password")),
+//                getUsersByEmailParams);
+//    }
 
     public GetUserRes getUser(int userIdx){
-        String getUserQuery = "select * from User where idx = ?";
-        int getUserParams = userIdx;
+        String getUserQuery = "select User.idx as userIdx, userName,\n" +
+                "    profImg,\n" +
+                "        (select COUNT(Follow.idx)\n" +
+                "           from Follow\n" +
+                "           where Follow.followIdx=User.idx) as follower,\n" +
+                "        (select COUNT(Follow.idx)\n" +
+                "           from Follow\n" +
+                "           where Follow.userIdx=User.idx) as following,\n" +
+                "        (select COUNT(Review.idx)\n" +
+                "            from Review\n" +
+                "            where Review.userIdx=User.idx) as reviews,\n" +
+                "        (select COUNT(Went.idx)\n" +
+                "            from Went\n" +
+                "            where Went.userIdx=User.idx) as went,\n" +
+                "        (select COUNT(Review.idx)\n" +
+                "            from Review inner join ReviewImage\n" +
+                "            where Review.userIdx=User.idx and ReviewImage.reviewIdx=Review.idx) as photos,\n" +
+                "        (select COUNT(Wish.idx)\n" +
+                "            from Wish\n" +
+                "            where Wish.userIdx=User.idx) as wish\n" +
+                "from User\n" +
+                "where User.idx=?;";
         return this.jdbcTemplate.queryForObject(getUserQuery,
                 (rs, rowNum) -> new GetUserRes(
                         rs.getInt("userIdx"),
                         rs.getString("userName"),
-                        rs.getString("ID"),
-                        rs.getString("Email"),
-                        rs.getString("password")),
-                getUserParams);
+                        rs.getString("profImg"),
+                        rs.getInt("follower"),
+                        rs.getInt("following"),
+                        rs.getInt("reviews"),
+                        rs.getInt("went"),
+                        rs.getInt("photos"),
+                        rs.getInt("wish")),
+                userIdx);
     }
     
 
