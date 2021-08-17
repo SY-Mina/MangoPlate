@@ -102,6 +102,33 @@ public class UserController {
     }
 
     /**
+     * 유저 정보 조회 API
+     * [GET] /users/:userIdx
+     * @return BaseResponse<GetUserRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("") // (GET) 127.0.0.1:9000/app/users
+    public BaseResponse<GetUserRes> getUser() {
+        // Get Users
+        try{
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+                System.out.println("userIdx: " + userIdx);
+                GetUserRes getUserRes = userProvider.getUser(userIdx);
+                return new BaseResponse<>(getUserRes);
+            }
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+    /**
      * 회원가입 API
      * [POST] /users
      * @return BaseResponse<PostUserRes>
@@ -191,6 +218,7 @@ public class UserController {
     public BaseResponse<String> loginKakao(String code){
         //code: 토큰 받기 요청을 위한 인증 코드
 
+        System.out.println(code);
         //test
         //POST로 카카오에 요청
         RestTemplate rt = new RestTemplate();

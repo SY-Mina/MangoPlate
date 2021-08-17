@@ -20,7 +20,7 @@ public class RestaurantDao {
     }
 
     public List<GetRestaurantRes> getRestaurants() {
-        String getRestaurantQuery = "select idx as restaurantIdx, name, rating, location,\n" +
+        String getRestaurantQuery = "select idx as restaurantIdx, name, rating, region as location,\n" +
                 "       (select COUNT(View.idx)\n" +
                 "       from View\n" +
                 "       where Restaurant.idx=View.idx) as views,\n" +
@@ -40,19 +40,6 @@ public class RestaurantDao {
                         rs.getInt("reviews"))
         );
     }
-
-//    public List<GetRestaurantRes> getRestaurantList() {
-//        String getRestaurantQuery = "";
-//        return this.jdbcTemplate.query(getRestaurantQuery,
-//                (rs, rowNum) -> new GetRestaurantRes(
-//                        rs.getInt("restaurantIdx"),
-//                        rs.getString("name"),
-//                        rs.getInt("rating"),
-//                        rs.getString("location"),
-//                        rs.getInt("views"),
-//                        rs.getInt("reviews"))
-//        );
-//    }
 
     public int checkItemExist(int restaurantIdx) {
         return this.jdbcTemplate.queryForObject("select exists(select idx from Restaurant where idx=?)",
