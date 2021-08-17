@@ -108,16 +108,15 @@ public class UserController {
      */
     // Path-variable
     @ResponseBody
-    @GetMapping("") // (GET) 127.0.0.1:9000/app/users
-    public BaseResponse<GetUserRes> getUser() {
+    @GetMapping("{userIdx}") // (GET) 127.0.0.1:9000/app/users
+    public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") int userIdx) {
         // Get Users
         try{
-            if (jwtService.getJwt()==null) {
-                return new BaseResponse<>(EMPTY_JWT);
+            int exists = userProvider.checkUserExists(userIdx);
+            if (exists==0) {
+                return new BaseResponse<>(GET_USER_INVALID);
             }
             else {
-                int userIdx = jwtService.getUserIdx();
-                System.out.println("userIdx: " + userIdx);
                 GetUserRes getUserRes = userProvider.getUser(userIdx);
                 return new BaseResponse<>(getUserRes);
             }

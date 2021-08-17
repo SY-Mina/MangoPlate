@@ -75,4 +75,7 @@ public class UserProvider {
 
     }
 
+    public int checkUserExists(int userIdx) {return userDao.checkUserExist(userIdx);}
+
+
 }

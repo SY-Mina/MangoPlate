@@ -129,6 +129,11 @@ public class UserDao {
 
     }
 
+    public int checkUserExist(int userIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from User where idx=?);",
+                int.class, userIdx);
+    }
+
     public int modifyUserName(PatchUserReq patchUserReq){
         String modifyUserNameQuery = "update UserInfo set userName = ? where userIdx = ? ";
         Object[] modifyUserNameParams = new Object[]{patchUserReq.getUserName(), patchUserReq.getUserIdx()};

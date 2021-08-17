@@ -44,6 +44,7 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
 
     GET_ITEM_EMPTY(false, 3015, "존재하지 않는 식당입니다."),
+    GET_USER_INVALID(false, 3016, "존재하지 않는 사용자입니다."),
 
 
     /**
