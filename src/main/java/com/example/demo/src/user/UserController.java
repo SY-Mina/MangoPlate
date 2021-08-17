@@ -159,26 +159,26 @@ public class UserController {
      * [PATCH] /users/:userIdx
      * @return BaseResponse<String>
      */
-    @ResponseBody
-    @PatchMapping("/{userIdx}")
-    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserReq user){
-        try {
-            //jwt에서 idx 추출.
-            int userIdxByJwt = jwtService.getUserIdx();
-            //userIdx와 접근한 유저가 같은지 확인
-            if(userIdx != userIdxByJwt){
-                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
-            }
-            //같다면 유저네임 변경
-            PatchUserReq patchUserReq = new PatchUserReq(user.getUserIdx(), user.getUserName());
-            userService.modifyUserName(patchUserReq);
-
-            String result = "Success";
-            return new BaseResponse<>(result);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
+//    @ResponseBody
+//    @PatchMapping("/{userIdx}")
+//    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserReq user){
+//        try {
+//            //jwt에서 idx 추출.
+//            int userIdxByJwt = jwtService.getUserIdx();
+//            //userIdx와 접근한 유저가 같은지 확인
+//            if(userIdx != userIdxByJwt){
+//                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+//            }
+//            //같다면 유저네임 변경
+//            PatchUserReq patchUserReq = new PatchUserReq(user.getUserIdx(), user.getUserName());
+//            userService.modifyUserName(patchUserReq);
+//
+//            String result = "Success";
+//            return new BaseResponse<>(result);
+//        } catch (BaseException exception) {
+//            return new BaseResponse<>((exception.getStatus()));
+//        }
+//    }
 
 
     /**

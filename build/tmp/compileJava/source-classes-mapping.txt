@@ -6,10 +6,18 @@ com/example/demo/src/user/model/PostUserReq.java
  com.example.demo.src.user.model.PostUserReq
 com/example/demo/config/Constant.java
  com.example.demo.config.Constant
+com/example/demo/src/restaurant/model/GetReviewsDetail.java
+ com.example.demo.src.restaurant.model.GetReviewsDetail
+com/example/demo/src/restaurant/model/GetKeyword.java
+ com.example.demo.src.restaurant.model.GetKeyword
+com/example/demo/src/restaurant/model/GetReviewsRes.java
+ com.example.demo.src.restaurant.model.GetReviewsRes
 com/example/demo/utils/ValidationRegex.java
  com.example.demo.utils.ValidationRegex
 com/example/demo/src/user/model/PostLoginRes.java
  com.example.demo.src.user.model.PostLoginRes
+com/example/demo/src/restaurant/model/GetReviews.java
+ com.example.demo.src.restaurant.model.GetReviews
 com/example/demo/src/user/model/KakaoAccount.java
  com.example.demo.src.user.model.KakaoAccount
 com/example/demo/src/user/model/KakaoUser.java
@@ -32,10 +40,16 @@ com/example/demo/src/user/model/Profile.java
  com.example.demo.src.user.model.Profile
 com/example/demo/src/test/TestController.java
  com.example.demo.src.test.TestController
+com/example/demo/src/restaurant/model/Reviews.java
+ com.example.demo.src.restaurant.model.Reviews
 com/example/demo/src/user/model/PostLoginReq.java
  com.example.demo.src.user.model.PostLoginReq
 com/example/demo/config/secret/Secret.java
  com.example.demo.config.secret.Secret
+com/example/demo/src/restaurant/model/GetRestDetailRes.java
+ com.example.demo.src.restaurant.model.GetRestDetailRes
+com/example/demo/src/restaurant/model/GetOpenInfo.java
+ com.example.demo.src.restaurant.model.GetOpenInfo
 com/example/demo/src/user/model/PostUserRes.java
  com.example.demo.src.user.model.PostUserRes
 com/example/demo/src/user/UserController.java
@@ -44,12 +58,16 @@ com/example/demo/src/user/model/KakaoUserInfo.java
  com.example.demo.src.user.model.KakaoUserInfo
 com/example/demo/config/BaseResponse.java
  com.example.demo.config.BaseResponse
+com/example/demo/src/restaurant/model/GetRestaurantInfo.java
+ com.example.demo.src.restaurant.model.GetRestaurantInfo
 com/example/demo/src/user/model/User.java
  com.example.demo.src.user.model.User
 com/example/demo/src/user/UserService.java
  com.example.demo.src.user.UserService
 com/example/demo/src/user/model/GetUserRes.java
  com.example.demo.src.user.model.GetUserRes
+com/example/demo/src/restaurant/model/GetMenu.java
+ com.example.demo.src.restaurant.model.GetMenu
 com/example/demo/config/BaseException.java
  com.example.demo.config.BaseException
 com/example/demo/DemoApplication.java

@@ -1,6 +1,7 @@
 package com.example.demo.src.restaurant;
 
 import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.src.user.model.GetUserRes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,6 +66,29 @@ public class RestaurantController {
         try{
             List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurants();
             return new BaseResponse<>(getRestaurantRes);
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+    /**
+     * 식당의 리뷰 전체 나열 API
+     * [GET] /stores/:restaurantIdx/reviews
+     * @return BaseResponse<GetReviewsRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("{restaurantIdx}/reviews") // (GET) 127.0.0.1:9000/app/stores/:restaurantIdx/reviews
+    public BaseResponse<GetReviewsRes> getReviews(@PathVariable("restaurantIdx") int restaurantIdx) {
+        if (restaurantProvider.checkItemExist(restaurantIdx) == 0) {
+            return new BaseResponse<>(GET_ITEM_EMPTY);
+        }
+        // Get Users
+        try{
+            GetReviewsRes getReviews = restaurantProvider.getReviews(restaurantIdx);
+            return new BaseResponse<>(getReviews);
 
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));

@@ -41,5 +41,19 @@ public class RestaurantProvider {
         }
     }
 
+    public GetReviewsRes getReviews(int restaurantIdx) throws BaseException{
 
+            GetReviewsRes getReviews = new GetReviewsRes();
+
+            GetReviewsDetail getReviewsDetail = restaurantDao.getReviewsDetail(restaurantIdx);
+            List<Reviews> reviewsList = restaurantDao.getReviewLists(restaurantIdx);
+
+            getReviews.setReviewsDetail(getReviewsDetail);
+            getReviews.setReviews(reviewsList);
+
+            return getReviews;
+
+    }
+
+    public int checkItemExist(int restaurantIdx){return restaurantDao.checkItemExist(restaurantIdx);}
 }
