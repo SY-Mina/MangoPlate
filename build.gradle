@@ -20,6 +20,8 @@ configurations {
 
 repositories {
     mavenCentral()
+    //S3
+    maven { url 'https://repo.spring.io/libs-milestone'}
 }
 
 dependencies {
@@ -53,10 +55,18 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-web')
 
+    // S3
+    implementation ('org.springframework.cloud:spring-cloud-starter-aws')
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
 
+}
 
-
-
+//S3
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE'
+    }
 }
 
 test {
