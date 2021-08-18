@@ -109,7 +109,33 @@ public class UserDao {
                         rs.getInt("wish")),
                 userIdx);
     }
-    
+
+
+    public List<RecommendUser> getRecommendUsers(int userIdx){
+        String getUsersQuery = "select distinct User.idx as userIdx, userName, profImg,\n" +
+                "        holic21,\n" +
+                "       (select count(Review.idx) from Review\n" +
+                "        where Review.userIdx=User.idx) as reviews,\n" +
+                "       (select count(Follow.idx) from Follow\n" +
+                "        where Follow.userIdx=User.idx) as follower,\n" +
+                "        (case (exists(select Follow.idx\n" +
+                "           from Follow\n" +
+                "           where Follow.followIdx=? and Follow.userIdx=User.idx))\n" +
+                "            when 1 then 'T'\n" +
+                "            else 'F' end) as followed\n" +
+                "from User inner join Follow\n" +
+                "where User.idx not in (?);";
+        return this.jdbcTemplate.query(getUsersQuery,
+                (rs,rowNum) -> new RecommendUser(
+                        rs.getInt("userIdx"),
+                        rs.getString("userName"),
+                        rs.getString("profImg"),
+                        rs.getString("holic21"),
+                        rs.getInt("reviews"),
+                        rs.getInt("follower"),
+                        rs.getString("followed")),
+                userIdx, userIdx);
+    }
 
     public int createUser(PostUserReq postUserReq){
         String createUserQuery = "insert into User (userName, password, email, phoneNum) VALUES (?,?,?,?)";

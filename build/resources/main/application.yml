@@ -12,3 +12,15 @@ spring:
     password: mina1234 # 변경해주세요
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
     # driver-class-name: com.mysql.jdbc.Driver # mysql 5버전
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    s3:
+      bucket: minafile
+      region:
+        static: ap-northeast-2
+    credentials:
+      accessKey: AKIA2ENTSIFFVKMGM556
+      secretKey: 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

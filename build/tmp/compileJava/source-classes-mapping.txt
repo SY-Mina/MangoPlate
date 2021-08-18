@@ -24,6 +24,8 @@ com/example/demo/src/user/model/KakaoUser.java
  com.example.demo.src.user.model.KakaoUser
 com/example/demo/src/user/UserDao.java
  com.example.demo.src.user.UserDao
+com/example/demo/src/user/model/GetRecommendUsersRes.java
+ com.example.demo.src.user.model.GetRecommendUsersRes
 com/example/demo/utils/AES128.java
  com.example.demo.utils.AES128
 com/example/demo/config/BaseResponseStatus.java
@@ -32,6 +34,8 @@ com/example/demo/src/user/model/PatchUserReq.java
  com.example.demo.src.user.model.PatchUserReq
 com/example/demo/src/user/model/Properties.java
  com.example.demo.src.user.model.Properties
+com/example/demo/utils/S3Uploader.java
+ com.example.demo.utils.S3Uploader
 com/example/demo/src/restaurant/RestaurantProvider.java
  com.example.demo.src.restaurant.RestaurantProvider
 com/example/demo/src/WebSecurityConfig.java
@@ -54,6 +58,8 @@ com/example/demo/src/user/model/PostUserRes.java
  com.example.demo.src.user.model.PostUserRes
 com/example/demo/src/user/UserController.java
  com.example.demo.src.user.UserController
+com/example/demo/src/restaurant/model/ReviewList.java
+ com.example.demo.src.restaurant.model.ReviewList
 com/example/demo/src/user/model/KakaoUserInfo.java
  com.example.demo.src.user.model.KakaoUserInfo
 com/example/demo/config/BaseResponse.java
@@ -64,6 +70,8 @@ com/example/demo/src/user/model/User.java
  com.example.demo.src.user.model.User
 com/example/demo/src/user/UserService.java
  com.example.demo.src.user.UserService
+com/example/demo/src/user/model/RecommendUser.java
+ com.example.demo.src.user.model.RecommendUser
 com/example/demo/src/user/model/GetUserRes.java
  com.example.demo.src.user.model.GetUserRes
 com/example/demo/src/restaurant/model/GetMenu.java

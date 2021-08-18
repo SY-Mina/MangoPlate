@@ -206,6 +206,33 @@ public class UserController {
 //        }
 //    }
 
+    /**
+     * 추천 유저 조회 API
+     * [GET] /users/search
+     * @return BaseResponse<GetUserRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/search") // (GET) 127.0.0.1:9000/app/users/search
+    public BaseResponse<GetRecommendUsersRes> getRecommendUsers() {
+        // Get Users
+        try{
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+                System.out.println("userIdx: " + userIdx);
+                GetRecommendUsersRes getRecommendUsersRes = userProvider.getRecommendUsers(userIdx);
+                return new BaseResponse<>(getRecommendUsersRes);
+            }
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
 
     /**
      * 카카오 로그인 API

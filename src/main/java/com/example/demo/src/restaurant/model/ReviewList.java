@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class ReviewList {
     private int heart;
     private int comments;
     private String date;
-    private ReviewImage reviewImages;
+    private List<String> images;
 
     public ReviewList() {}
 }
