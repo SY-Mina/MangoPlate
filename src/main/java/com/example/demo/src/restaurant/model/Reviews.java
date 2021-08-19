@@ -21,7 +21,7 @@ public class Reviews {
     private int heart;
     private int comments;
     private String date;
-    //private List<String> images;
+    private List<String> images;
 
     public Reviews() {}
 }

@@ -96,4 +96,26 @@ public class RestaurantController {
 
     }
 
+    /**
+     * 특정 식당 조회 API
+     * [GET] /stores/:restaurantIdx
+     * @return BaseResponse<GetReviewsRes>
+     */
+    // Path-variable
+//    @ResponseBody
+//    @GetMapping("{restaurantIdx}") // (GET) 127.0.0.1:9000/app/stores/:restaurantIdx
+//    public BaseResponse<GetReviewsRes> getReviews(@PathVariable("restaurantIdx") int restaurantIdx) {
+//        if (restaurantProvider.checkItemExist(restaurantIdx) == 0) {
+//            return new BaseResponse<>(GET_ITEM_EMPTY);
+//        }
+//        // Get Users
+//        try{
+//            GetReviewsRes getReviews = restaurantProvider.getReviews(restaurantIdx);
+//            return new BaseResponse<>(getReviews);
+//
+//        } catch(BaseException exception){
+//            return new BaseResponse<>((exception.getStatus()));
+//        }
+//
+//    }
 }

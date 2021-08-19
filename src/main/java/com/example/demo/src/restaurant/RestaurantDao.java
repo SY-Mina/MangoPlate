@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -33,6 +34,7 @@ public class RestaurantDao {
                 "           where Restaurant.idx=Review.restaurantIdx) as reviews\n" +
                 "from Restaurant\n" +
                 "order by rating desc;";
+
         return this.jdbcTemplate.query(getRestaurantQuery,
                 (rs, rowNum) -> new GetRestaurantRes(
                         rs.getInt("restaurantIdx"),
@@ -78,6 +80,7 @@ public class RestaurantDao {
     }
 
     public List<Reviews> getReviewLists(int restaurantIdx) {
+
         return this.jdbcTemplate.query("select (case rateType\n" +
                         "    when 1 then '맛있다!'\n" +
                         "    when 2 then '괜찮다.'\n" +
@@ -115,10 +118,18 @@ public class RestaurantDao {
                         rs.getString("content"),
                         rs.getInt("heart"),
                         rs.getInt("comments"),
-                        rs.getString("date")),
-                restaurantIdx);
-
+                        rs.getString("date"),
+                        getReviewImages(rs.getInt("reviewIdx"))), restaurantIdx
+                );
     }
 
+    public List<String> getReviewImages(int reviewIdx) {
+        String getReviewImagesQuery = "select url\n" +
+                "from ReviewImage\n" +
+                "where ReviewImage.reviewIdx=?";
+        List<String> images = this.jdbcTemplate.query(getReviewImagesQuery,
+                (rs,rowNum) -> new String(rs.getString("url")), reviewIdx);
 
+        return images;
+    }
 }
