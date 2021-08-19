@@ -11,4 +11,6 @@ import lombok.Setter;
 public class GetKeyword {
     private String keyword;
 
+    public GetKeyword() {}
+
 }

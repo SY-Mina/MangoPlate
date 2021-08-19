@@ -55,5 +55,25 @@ public class RestaurantProvider {
 
     }
 
+    public GetRestDetailRes getRestDetail(int restaurantIdx, int userIdx) throws BaseException{
+
+        GetRestDetailRes getRestDetail = new GetRestDetailRes();
+
+        GetRestaurantInfo getRestaurantInfo = restaurantDao.getRestaurantInfo(restaurantIdx, userIdx);
+        GetOpenInfo getOpenInfo = restaurantDao.getOpenInfo(restaurantIdx);
+        GetMenu getMenu = restaurantDao.getMenu(restaurantIdx);
+        List<GetKeyword> keywords = restaurantDao.getKeyword(restaurantIdx);
+        List<Reviews> reviews = restaurantDao.getReviews(restaurantIdx)
+
+        getRestDetail.setRestaurant(getRestaurantInfo);
+        getRestDetail.setOpenInfo(getOpenInfo);
+        getRestDetail.setMenus(getMenu);
+        getRestDetail.setKeywords(keywords);
+        getRestDetail.setReviews(reviews);
+
+        return getRestDetail;
+
+    }
+
     public int checkItemExist(int restaurantIdx){return restaurantDao.checkItemExist(restaurantIdx);}
 }

@@ -15,5 +15,10 @@ public class GetOpenInfo {
     private String lastOrder;
     private String holiday;
     private String price;
+    private String type;
+    private String parking;
+    private String website;
+
+    public GetOpenInfo() {}
 
 }

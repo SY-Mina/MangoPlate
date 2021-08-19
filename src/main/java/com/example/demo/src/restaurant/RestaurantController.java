@@ -102,20 +102,28 @@ public class RestaurantController {
      * @return BaseResponse<GetReviewsRes>
      */
     // Path-variable
-//    @ResponseBody
-//    @GetMapping("{restaurantIdx}") // (GET) 127.0.0.1:9000/app/stores/:restaurantIdx
-//    public BaseResponse<GetReviewsRes> getReviews(@PathVariable("restaurantIdx") int restaurantIdx) {
-//        if (restaurantProvider.checkItemExist(restaurantIdx) == 0) {
-//            return new BaseResponse<>(GET_ITEM_EMPTY);
-//        }
-//        // Get Users
-//        try{
-//            GetReviewsRes getReviews = restaurantProvider.getReviews(restaurantIdx);
-//            return new BaseResponse<>(getReviews);
-//
-//        } catch(BaseException exception){
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//
-//    }
+    @ResponseBody
+    @GetMapping("{restaurantIdx}") // (GET) 127.0.0.1:9000/app/stores/:restaurantIdx
+    public BaseResponse<GetRestDetailRes> getReviews(@PathVariable("restaurantIdx") int restaurantIdx) {
+        if (restaurantProvider.checkItemExist(restaurantIdx) == 0) {
+            return new BaseResponse<>(GET_ITEM_EMPTY);
+        }
+        // Get Users
+        try{
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+                System.out.println("userIdx: " + userIdx);
+                GetRestDetailRes getRestDetail = restaurantProvider.getRestDetail(restaurantIdx, userIdx);
+                return new BaseResponse<>(getRestDetail);
+            }
+
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
 }

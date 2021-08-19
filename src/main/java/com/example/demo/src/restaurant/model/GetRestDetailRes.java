@@ -5,16 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class GetRestDetailRes {
     private GetRestaurantInfo restaurant;
-    private String myWish;
-    private String myBeen;
     private GetOpenInfo openInfo;
     private GetMenu menus;
-    private GetKeyword keywords;
-    private GetReviews reviews;
+    private List<GetKeyword> keywords = new ArrayList<>();
+    private List<Reviews> reviews = new ArrayList<>();
+
+    public GetRestDetailRes() {}
 
 }

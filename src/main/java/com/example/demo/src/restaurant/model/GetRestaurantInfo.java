@@ -5,17 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class GetRestaurantInfo {
     private int restaurantIdx;
     private String name;
-    private int rating;
+    private List<String> images = new ArrayList<>();
+    private float rating;
     private String location;
     private int views;
     private int reviews;
     private int wish;
+    private String myWish;
+    private String myBeen;
 
     public GetRestaurantInfo() {}
 

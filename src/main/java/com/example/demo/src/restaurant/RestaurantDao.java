@@ -132,4 +132,28 @@ public class RestaurantDao {
 
         return images;
     }
+
+    public List<String> getRestaurantImages(int restaurantIdx) {
+        String getReviewImagesQuery = "";
+        List<String> images = this.jdbcTemplate.query(getReviewImagesQuery,
+                (rs,rowNum) -> new String(rs.getString("url")), reviewIdx);
+
+        return images;
+    }
+
+    public GetRestaurantInfo getRestaurantInfo(int restaurantIdx, int userIdx) {
+        return this.jdbcTemplate.queryForObject("",
+                (rs, rowNum) -> new GetReviewsDetail(
+                        rs.getInt("restaurantIdx"),
+                        rs.getString("name"),
+                        getRestaurantImages(restaurantIdx),
+                        rs.getFloat("rating"),
+                        rs.getString("location"),
+                        rs.getInt("views"),
+                        rs.getInt("reviews"),
+                        rs.getInt("wish"),
+                        rs.getString("myWish"),
+                        rs.getString("myBeen")),
+                restaurantIdx);
+    }
 }
