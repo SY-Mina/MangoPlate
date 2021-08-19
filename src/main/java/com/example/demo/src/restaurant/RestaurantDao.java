@@ -20,21 +20,25 @@ public class RestaurantDao {
     }
 
     public List<GetRestaurantRes> getRestaurants() {
-        String getRestaurantQuery = "select idx as restaurantIdx, name, rating, region as location,\n" +
+        String getRestaurantQuery = "select idx as restaurantIdx, name, rating,\n" +
+                "       (select url from ReviewImage inner join Review\n" +
+                "           where ReviewImage.reviewIdx=Review.idx\n" +
+                "             and Review.restaurantIdx=Restaurant.idx limit 1) as profImg,\n" +
+                "       region as location,\n" +
                 "       (select COUNT(View.idx)\n" +
                 "       from View\n" +
                 "       where Restaurant.idx=View.idx) as views,\n" +
                 "       (select COUNT(Review.idx)\n" +
                 "           from Review\n" +
                 "           where Restaurant.idx=Review.restaurantIdx) as reviews\n" +
-                "\n" +
                 "from Restaurant\n" +
                 "order by rating desc;";
         return this.jdbcTemplate.query(getRestaurantQuery,
                 (rs, rowNum) -> new GetRestaurantRes(
                         rs.getInt("restaurantIdx"),
                         rs.getString("name"),
-                        rs.getInt("rating"),
+                        rs.getString("profImg"),
+                        rs.getFloat("rating"),
                         rs.getString("location"),
                         rs.getInt("views"),
                         rs.getInt("reviews"))

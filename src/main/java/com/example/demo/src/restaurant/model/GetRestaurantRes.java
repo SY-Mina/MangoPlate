@@ -11,7 +11,8 @@ import lombok.Setter;
 public class GetRestaurantRes {
     private int restaurantIdx;
     private String name;
-    private int rating;
+    private String profImg;
+    private float rating;
     private String location;
     private int views;
     private int reviews;
