@@ -1,15 +1,17 @@
 com/example/demo/src/restaurant/RestaurantDao.java
  com.example.demo.src.restaurant.RestaurantDao
+com/example/demo/src/restaurant/model/GetReviewList.java
+ com.example.demo.src.restaurant.model.GetReviewList
 com/example/demo/src/restaurant/RestaurantService.java
  com.example.demo.src.restaurant.RestaurantService
 com/example/demo/src/user/model/PostUserReq.java
  com.example.demo.src.user.model.PostUserReq
 com/example/demo/config/Constant.java
  com.example.demo.config.Constant
-com/example/demo/src/restaurant/model/GetReviewsDetail.java
- com.example.demo.src.restaurant.model.GetReviewsDetail
 com/example/demo/src/restaurant/model/GetKeyword.java
  com.example.demo.src.restaurant.model.GetKeyword
+com/example/demo/src/restaurant/model/GetReviewsDetail.java
+ com.example.demo.src.restaurant.model.GetReviewsDetail
 com/example/demo/src/restaurant/model/GetReviewsRes.java
  com.example.demo.src.restaurant.model.GetReviewsRes
 com/example/demo/utils/ValidationRegex.java
@@ -24,8 +26,12 @@ com/example/demo/src/user/model/KakaoUser.java
  com.example.demo.src.user.model.KakaoUser
 com/example/demo/src/user/UserDao.java
  com.example.demo.src.user.UserDao
+com/example/demo/src/restaurant/model/GetMyRestaurantInfo.java
+ com.example.demo.src.restaurant.model.GetMyRestaurantInfo
 com/example/demo/src/user/model/GetRecommendUsersRes.java
  com.example.demo.src.user.model.GetRecommendUsersRes
+com/example/demo/src/restaurant/model/MyMenu.java
+ com.example.demo.src.restaurant.model.MyMenu
 com/example/demo/utils/AES128.java
  com.example.demo.utils.AES128
 com/example/demo/config/BaseResponseStatus.java

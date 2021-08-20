@@ -5,12 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class GetOpenInfo {
     private String updatedAt;
-    private String openTime;
+    private List<String> openTime = new ArrayList<>();
     private String breakTime;
     private String lastOrder;
     private String holiday;

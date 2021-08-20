@@ -104,7 +104,7 @@ public class RestaurantController {
     // Path-variable
     @ResponseBody
     @GetMapping("{restaurantIdx}") // (GET) 127.0.0.1:9000/app/stores/:restaurantIdx
-    public BaseResponse<GetRestDetailRes> getReviews(@PathVariable("restaurantIdx") int restaurantIdx) {
+    public BaseResponse<GetRestDetailRes> getRestDetail(@PathVariable("restaurantIdx") int restaurantIdx) {
         if (restaurantProvider.checkItemExist(restaurantIdx) == 0) {
             return new BaseResponse<>(GET_ITEM_EMPTY);
         }

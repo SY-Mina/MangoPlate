@@ -59,13 +59,15 @@ public class RestaurantProvider {
 
         GetRestDetailRes getRestDetail = new GetRestDetailRes();
 
-        GetRestaurantInfo getRestaurantInfo = restaurantDao.getRestaurantInfo(restaurantIdx, userIdx);
+        GetRestaurantInfo getRestaurantInfo = restaurantDao.getRestaurantInfo(restaurantIdx);
+        GetMyRestaurantInfo getMyRestaurantInfo = restaurantDao.getMyRestaurantInfo(restaurantIdx, userIdx);
         GetOpenInfo getOpenInfo = restaurantDao.getOpenInfo(restaurantIdx);
         GetMenu getMenu = restaurantDao.getMenu(restaurantIdx);
         List<GetKeyword> keywords = restaurantDao.getKeyword(restaurantIdx);
-        List<Reviews> reviews = restaurantDao.getReviews(restaurantIdx)
+        GetReviewList reviews = restaurantDao.getReviews(restaurantIdx);
 
         getRestDetail.setRestaurant(getRestaurantInfo);
+        getRestDetail.setMyinfo(getMyRestaurantInfo);
         getRestDetail.setOpenInfo(getOpenInfo);
         getRestDetail.setMenus(getMenu);
         getRestDetail.setKeywords(keywords);

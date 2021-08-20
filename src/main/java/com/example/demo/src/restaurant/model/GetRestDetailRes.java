@@ -13,10 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 public class GetRestDetailRes {
     private GetRestaurantInfo restaurant;
+    private GetMyRestaurantInfo myinfo;
     private GetOpenInfo openInfo;
     private GetMenu menus;
     private List<GetKeyword> keywords = new ArrayList<>();
-    private List<Reviews> reviews = new ArrayList<>();
+    private GetReviewList reviews;
 
     public GetRestDetailRes() {}
 

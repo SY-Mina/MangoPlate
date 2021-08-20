@@ -6,15 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class GetMenu {
     private String updatedAt;
-    private String menuName;
-    private String price;
-    private String List<String> menuImg = new ArrayList<>();
+    private List<MyMenu> menu = new ArrayList<>();
+
+    //private String List<String> menuImg = new ArrayList<>();
 
     public GetMenu() {}
 }

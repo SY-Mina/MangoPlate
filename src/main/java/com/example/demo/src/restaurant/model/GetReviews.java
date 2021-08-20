@@ -5,11 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class GetReviews {
     private int total;
+    private int good;
+    private int soso;
+    private int bad;
+    List<Reviews> reviewList = new ArrayList<>();
 
-
+    public GetReviews() {}
 }

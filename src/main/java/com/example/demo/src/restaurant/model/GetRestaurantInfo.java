@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,8 +20,8 @@ public class GetRestaurantInfo {
     private int views;
     private int reviews;
     private int wish;
-    private String myWish;
-    private String myBeen;
+//    private String myWish;
+//    private String myBeen;
 
     public GetRestaurantInfo() {}
 
