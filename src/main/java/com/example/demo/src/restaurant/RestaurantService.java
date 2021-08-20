@@ -56,4 +56,16 @@ public class RestaurantService {
         }
 
     }
+
+    //POST
+    public void postWent(int userIdx, int restaurantIdx, String status, String content) throws BaseException {
+
+        try{
+            restaurantDao.postWent(userIdx, restaurantIdx, status, content);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }

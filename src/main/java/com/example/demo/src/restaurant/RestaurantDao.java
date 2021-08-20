@@ -353,4 +353,11 @@ public class RestaurantDao {
                         rs.getString("status")),
                 userIdx, itemIdx);
     }
+
+    public int postWent(int userIdx, int restaurantIdx, String status, String content) {
+        this.jdbcTemplate.update("insert into Went (userIdx, restaurantIdx, public, content) VALUE (?,?,?,?)",
+                new Object[]{userIdx, restaurantIdx, status, content}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
 }

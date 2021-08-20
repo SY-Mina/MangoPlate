@@ -32,6 +32,7 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_PASSWORD(false, 2018, "비밀번호는 6자 이상 12자 이하입니다."),
     POST_USERS_INVALID_PHONE(false, 2019, "핸드폰 형식을 확인해주세요."),
     POST_USERS_INVALID_NAME(false, 2020, "닉네임은 20자 이내로 입력해주세요."),
+    POST_STORES_INVALID(false, 2021, "게시물은 50자 이내로 작성해주세요"),
 
     /**
      * 3000 : Response 오류

@@ -84,6 +84,8 @@ com/example/demo/src/user/model/RecommendUser.java
  com.example.demo.src.user.model.RecommendUser
 com/example/demo/src/user/model/GetUserRes.java
  com.example.demo.src.user.model.GetUserRes
+com/example/demo/src/restaurant/model/PostWentReq.java
+ com.example.demo.src.restaurant.model.PostWentReq
 com/example/demo/src/restaurant/model/GetMenu.java
  com.example.demo.src.restaurant.model.GetMenu
 com/example/demo/DemoApplication.java

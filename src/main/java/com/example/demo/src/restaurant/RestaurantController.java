@@ -130,7 +130,7 @@ public class RestaurantController {
     /**
      * 식당 가고싶다 API
      * [POST] /stores/wish
-     * @return BaseResponse<GetRecommendRes>
+     * @return BaseResponse<String>
      */
     // Path-variable
     @ResponseBody
@@ -171,6 +171,40 @@ public class RestaurantController {
                 }
 
             }
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 식당 가봤어요 API
+     * [POST] /stores/went
+     * @return BaseResponse<String>
+     */
+    // Path-variable
+    @ResponseBody
+    @PostMapping("/went") // (GET) 127.0.0.1:9000/app/stores/went
+    public BaseResponse<String> postHeart(@RequestBody PostWentReq postWentReq) throws BaseException {
+        try{
+                if (restaurantProvider.checkItemExist(postWentReq.getRestaurantIdx()) == 0) {
+                    return new BaseResponse<>(GET_ITEM_EMPTY);
+                }
+                if (jwtService.getJwt()==null) {
+                    return new BaseResponse<>(EMPTY_JWT);
+                }
+                if (postWentReq.getContent().length() > 50) {
+                    return new BaseResponse<>(POST_STORES_INVALID);
+                }
+                else {
+                    int userIdx = jwtService.getUserIdx();
+                    int restaurantIdx = postWentReq.getRestaurantIdx();
+
+                    restaurantService.postWent(userIdx, restaurantIdx, postWentReq.getPublicStatus(), postWentReq.getContent());
+                    String result ="T";
+                    return new BaseResponse<>(result);
+                }
+
+
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
