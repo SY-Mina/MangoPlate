@@ -126,4 +126,53 @@ public class RestaurantController {
         }
 
     }
+
+    /**
+     * 식당 가고싶다 API
+     * [POST] /stores/wish
+     * @return BaseResponse<GetRecommendRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @PostMapping("/wish") // (GET) 127.0.0.1:9000/app/stores/wish
+    public BaseResponse<String> postHeart(@RequestBody PostHeartReq postHeartReq) throws BaseException {
+        try{
+            if (restaurantProvider.checkItemExist(postHeartReq.getRestaurantIdx()) == 0) {
+                return new BaseResponse<>(GET_ITEM_EMPTY);
+            }
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+
+                // 하트 새로 만듬.
+                if (restaurantProvider.checkHeart(userIdx, postHeartReq.getRestaurantIdx())==0) {
+                    restaurantService.postHeart(userIdx, postHeartReq.getRestaurantIdx());
+                    String result ="T";
+                    return new BaseResponse<>(result);
+                }
+                else {
+                    // 하트 T->F
+                    if (restaurantProvider.checkStatusHeart(userIdx, postHeartReq.getRestaurantIdx()).equals("T")) {
+                        restaurantService.patchHeart("F", userIdx, postHeartReq.getRestaurantIdx());
+
+                        String result ="F";
+                        return new BaseResponse<>(result);
+                    }
+                    // 하트 F->T
+                    else {
+                        restaurantService.patchHeart("T", userIdx, postHeartReq.getRestaurantIdx());
+
+                        String result ="T";
+                        return new BaseResponse<>(result);
+                    }
+
+                }
+
+            }
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

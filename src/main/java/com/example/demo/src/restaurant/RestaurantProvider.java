@@ -78,4 +78,10 @@ public class RestaurantProvider {
     }
 
     public int checkItemExist(int restaurantIdx){return restaurantDao.checkItemExist(restaurantIdx);}
+
+    public int checkHeart(int userIdx, int itemIdx) {
+        return restaurantDao.checkHeart(userIdx, itemIdx);}
+
+    public String checkStatusHeart(int userIdx, int itemIdx) {
+        return restaurantDao.checkStatusHeart(userIdx, itemIdx);}
 }

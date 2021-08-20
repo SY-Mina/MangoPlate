@@ -34,4 +34,26 @@ public class RestaurantService {
 
     }
 
+    //POST
+    public void postHeart(int userIdx, int restaurantIdx) throws BaseException {
+
+        try{
+            restaurantDao.postHeart(userIdx, restaurantIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+    public void patchHeart(String status, int userIdx, int restaurantIdx) throws BaseException {
+
+        try{
+            restaurantDao.patchHeart(status, userIdx, restaurantIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }

@@ -326,4 +326,31 @@ public class RestaurantDao {
                         getReviewImages(rs.getInt("reviewIdx"))), restaurantIdx
         );
     }
+
+    public int checkHeart(int userIdx, int restaurantIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Wish where userIdx = ? and restaurantIdx = ?)",
+                int.class,
+                userIdx, restaurantIdx);
+    }
+
+    public int postHeart(int userIdx, int restaurantIdx) {
+        this.jdbcTemplate.update("insert into Wish (userIdx, restaurantIdx) VALUE (?,?)",
+                new Object[]{userIdx, restaurantIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int patchHeart (String status, int userIdx, int restaurantIdx) {
+        this.jdbcTemplate.update("update Wish set status = ? where Wish.userIdx=? and Wish.restaurantIdx=?",
+                new Object[]{status, userIdx, restaurantIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public String checkStatusHeart(int userIdx, int itemIdx) {
+        return this.jdbcTemplate.queryForObject("select status from Wish where userIdx = ? and restaurantIdx = ?;" ,
+                (rs, rowNum) -> new String(
+                        rs.getString("status")),
+                userIdx, itemIdx);
+    }
 }
