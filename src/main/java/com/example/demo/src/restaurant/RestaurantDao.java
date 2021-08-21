@@ -254,6 +254,32 @@ public class RestaurantDao {
         );
     }
 
+    public List<GetNearStoreRes> getNearStore(String location) {
+
+        return this.jdbcTemplate.query("select idx as restaurantIdx, name, rating,\n" +
+                        "       (select url from ReviewImage inner join Review\n" +
+                        "           where ReviewImage.reviewIdx=Review.idx\n" +
+                        "             and Review.restaurantIdx=Restaurant.idx limit 1) as profImg,\n" +
+                        "       region as location,\n" +
+                        "       (select COUNT(View.idx)\n" +
+                        "       from View\n" +
+                        "       where Restaurant.idx=View.idx) as views,\n" +
+                        "       (select COUNT(Review.idx)\n" +
+                        "           from Review\n" +
+                        "           where Restaurant.idx=Review.restaurantIdx) as reviews\n" +
+                        "from Restaurant\n" +
+                        "where region=? order by rating desc limit 4;",
+                (rs, rowNum) -> new GetNearStoreRes(
+                        rs.getInt("restaurantIdx"),
+                        rs.getString("name"),
+                        rs.getString("profImg"),
+                        rs.getFloat("rating"),
+                        rs.getString("location"),
+                        rs.getInt("views"),
+                        rs.getInt("reviews")), location
+        );
+    }
+
     public List<GetKeyword> getKeyword(int restaurantIdx) {
 
         return this.jdbcTemplate.query("select content as keyword\n" +
@@ -325,6 +351,15 @@ public class RestaurantDao {
                         rs.getString("date"),
                         getReviewImages(rs.getInt("reviewIdx"))), restaurantIdx
         );
+    }
+
+    public String getLocation(int restaurantIdx) {
+        return this.jdbcTemplate.queryForObject("select region\n" +
+                        "from Restaurant\n" +
+                        "where idx=?;",
+                (rs, rowNum) -> new String(
+                        rs.getString("region")),
+                restaurantIdx);
     }
 
     public int checkHeart(int userIdx, int restaurantIdx) {

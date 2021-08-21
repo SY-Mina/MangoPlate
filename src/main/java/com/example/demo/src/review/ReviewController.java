@@ -52,6 +52,66 @@ public class ReviewController {
         this.jwtService = jwtService;
     }
 
+    /**
+     * 소식에서 리뷰 조회 API
+     * [GET] /reviews
+     * @return BaseResponse<List<GetReviewsRes>>
+     */
+    // Path-variable
+    @ResponseBody
+    @PostMapping("") // (GET) 127.0.0.1:9000/app/reviews
+    public BaseResponse<List<GetReviewsRes>> getReviews(@RequestBody GetReviewsReq getReviewReq) {
+        if (getReviewReq.getType().size() == 0) {
+            return new BaseResponse<>(GET_REVIEW_TYPE_EMPTY);
+        }
+        try{
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
 
+                List<GetReviewsRes> getReviews = reviewProvider.getReviews(getReviewReq.getType(), userIdx);
+                return new BaseResponse<>(getReviews);
+            }
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+    /**
+     * 식당 가봤어요 API
+     * [POST] /reviews
+     * @return BaseResponse<String>
+     */
+    // Path-variable
+//    @ResponseBody
+//    @PostMapping("") // (GET) 127.0.0.1:9000/app/stores/went
+//    public BaseResponse<String> postHeart(@RequestBody PostReviewReq postReviewReq) throws BaseException {
+//        try{
+//            if (restaurantProvider.checkItemExist(postReviewReq.getRestaurantIdx()) == 0) {
+//                return new BaseResponse<>(GET_ITEM_EMPTY);
+//            }
+//            if (jwtService.getJwt()==null) {
+//                return new BaseResponse<>(EMPTY_JWT);
+//            }
+//            if (postWentReq.getContent().length() > 50) {
+//                return new BaseResponse<>(POST_STORES_INVALID);
+//            }
+//            else {
+//                int userIdx = jwtService.getUserIdx();
+//                int restaurantIdx = postReviewReq.getRestaurantIdx();
+//
+//                restaurantService.postWent(userIdx, restaurantIdx, postReviewReq.getRateType(), postReviewReq.getImages());
+//                String result ="T";
+//                return new BaseResponse<>(result);
+//            }
+//
+//
+//        } catch(BaseException exception){
+//            return new BaseResponse<>((exception.getStatus()));
+//        }
+//    }
 
 }

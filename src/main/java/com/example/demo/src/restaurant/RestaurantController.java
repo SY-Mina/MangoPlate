@@ -62,7 +62,7 @@ public class RestaurantController {
     @ResponseBody
     @GetMapping("") // (GET) 127.0.0.1:9000/app/stores
     public BaseResponse<List<GetRestaurantRes>> getRestaurants() {
-        // Get Users
+
         try{
             List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurants();
             return new BaseResponse<>(getRestaurantRes);
@@ -120,6 +120,28 @@ public class RestaurantController {
                 return new BaseResponse<>(getRestDetail);
             }
 
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+    /**
+     * 주변 식당 조회 API
+     * [GET] /stores/:restaurantIdx
+     * @return BaseResponse<GetReviewsRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("{restaurantIdx}/near") // (GET) 127.0.0.1:9000/app/stores/:restaurantIdx
+    public BaseResponse<List<GetNearStoreRes>> getNearStore(@PathVariable("restaurantIdx") int restaurantIdx) {
+        if (restaurantProvider.checkItemExist(restaurantIdx) == 0) {
+            return new BaseResponse<>(GET_ITEM_EMPTY);
+        }
+        try{
+            List<GetNearStoreRes> getNearStore = restaurantProvider.getNearStore(restaurantIdx);
+            return new BaseResponse<>(getNearStore);
 
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));

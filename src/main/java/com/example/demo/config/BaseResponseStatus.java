@@ -33,6 +33,7 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_PHONE(false, 2019, "핸드폰 형식을 확인해주세요."),
     POST_USERS_INVALID_NAME(false, 2020, "닉네임은 20자 이내로 입력해주세요."),
     POST_STORES_INVALID(false, 2021, "게시물은 50자 이내로 작성해주세요"),
+    GET_REVIEW_TYPE_EMPTY(false, 2022, "종류는 한가지 이상 선택해주세요."),
 
     /**
      * 3000 : Response 오류

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -31,5 +32,22 @@ public class ReviewProvider {
         this.jwtService = jwtService;
     }
 
+
+    public List<GetReviewsRes> getReviews(List<Integer> type, int userIdx) throws BaseException{
+
+        List<GetReviewsRes> getReviews = new ArrayList<>();
+
+            int size = type.size();
+            for (int i=0; i<size; i++) {
+                int total = reviewDao.getReviews(userIdx, type.get(i)).size();
+                for (int j=0; j<total; j++) {
+                    getReviews.add(reviewDao.getReviews(userIdx, type.get(i)).get(j));
+                }
+
+            }
+
+            return getReviews;
+        
+    }
 
 }

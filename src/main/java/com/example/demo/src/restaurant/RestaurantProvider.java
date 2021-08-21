@@ -41,6 +41,18 @@ public class RestaurantProvider {
         }
     }
 
+    public List<GetNearStoreRes> getNearStore(int restaurantIdx) throws BaseException{
+        String location = restaurantDao.getLocation(restaurantIdx);
+
+        try{
+            List<GetNearStoreRes> getNearStore = restaurantDao.getNearStore(location);
+            return getNearStore;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public GetReviewsRes getReviews(int restaurantIdx) throws BaseException{
 
             GetReviewsRes getReviews = new GetReviewsRes();
