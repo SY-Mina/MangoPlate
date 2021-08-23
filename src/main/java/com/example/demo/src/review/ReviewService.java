@@ -34,4 +34,41 @@ public class ReviewService {
 
     }
 
+
+    //POST
+    public int postReview(int userIdx, int restaurantIdx, int rateType, String content) throws BaseException {
+
+        try{
+            int result = reviewDao.postReview(userIdx, restaurantIdx, rateType, content);
+            return result;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+
+    //POST
+    public int postReviewImages(int reviewIdx, String url) throws BaseException {
+
+        try{
+            int result =reviewDao.postReviewImages(reviewIdx, url);
+            return result;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+    //PATCH
+    public int patchItemStatus(int reviewIdx, int userIdx) throws BaseException {
+
+        try{
+            int result =reviewDao.patchItemStatus(reviewIdx, userIdx);
+            return result;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }

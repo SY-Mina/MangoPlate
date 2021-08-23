@@ -61,7 +61,7 @@ public class ReviewDao {
                 "                where Heart.userIdx=? and Heart.reviewIdx=Review.idx) = 1)\n" +
                 "            then 'T' end)) as myHeart\n" +
                 "from Review inner join User U on Review.userIdx = U.idx\n" +
-                "where Review.rateType=?;";
+                "where Review.rateType=? and Review.status='T';";
          return this.jdbcTemplate.query(getReviewImagesQuery,
                     (rs,rowNum) -> new GetReviewsRes(
                             rs.getString("type"),
@@ -94,4 +94,42 @@ public class ReviewDao {
         return images;
     }
 
+    public int postReview(int userIdx, int restaurantIdx, int rateType, String content) {
+        this.jdbcTemplate.update("insert into Review (userIdx, restaurantIdx, rateType, content) VALUE (?,?,?,?)",
+                new Object[]{userIdx, restaurantIdx, rateType, content}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int checkItemExist(int restaurantIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Restaurant where idx=?)",
+                int.class,
+                restaurantIdx);
+    }
+
+    public int checkReviewExist(int reviewIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Review where idx=?)",
+                int.class,
+                reviewIdx);
+    }
+
+    public int postReviewImages(int reviewIdx, String url) {
+        this.jdbcTemplate.update("insert into ReviewImage (reviewIdx, url) VALUE (?,?)",
+                new Object[]{reviewIdx, url}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int checkStatus (int reviewIdx, int userIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Review where idx = ? and userIdx = ?)",
+                int.class,
+                reviewIdx, userIdx);
+    }
+
+    public int patchItemStatus (int reviewIdx,int userIdx) {
+        this.jdbcTemplate.update("update Review set status = 'F' where Review.idx = ? and Review.userIdx=?",
+                new Object[]{reviewIdx, userIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
 }

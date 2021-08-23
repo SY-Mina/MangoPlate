@@ -34,6 +34,8 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_NAME(false, 2020, "닉네임은 20자 이내로 입력해주세요."),
     POST_STORES_INVALID(false, 2021, "게시물은 50자 이내로 작성해주세요"),
     GET_REVIEW_TYPE_EMPTY(false, 2022, "종류는 한가지 이상 선택해주세요."),
+    POST_REVIEW_INVALID_RATETYPE(false, 2023, "종류를 다시 확인해주세요."),
+    POST_REVIEW_INVALID_CONTENT(false, 2024, "게시물은 1000자 이내로 작성해주세요."),
 
     /**
      * 3000 : Response 오류
@@ -47,7 +49,11 @@ public enum BaseResponseStatus {
 
     GET_ITEM_EMPTY(false, 3015, "존재하지 않는 식당입니다."),
     GET_USER_INVALID(false, 3016, "존재하지 않는 사용자입니다."),
+    GET_REVIEW_EMPTY(false, 3017, "존재하지 않는 리뷰입니다."),
 
+
+    PATCH_USER_INVALID_STATUS(false, 3018, "삭제할 권한이 없는 사용자입니다."),
+    PATCH_USER_INVALID(false, 3019, "수정할 권한이 없는 사용자입니다."),
 
     /**
      * 4000 : Database, Server 오류

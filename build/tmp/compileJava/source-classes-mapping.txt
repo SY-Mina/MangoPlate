@@ -28,6 +28,8 @@ com/example/demo/utils/S3Uploader.java
  com.example.demo.utils.S3Uploader
 com/example/demo/src/restaurant/RestaurantProvider.java
  com.example.demo.src.restaurant.RestaurantProvider
+com/example/demo/src/review/model/PatchReviewReq.java
+ com.example.demo.src.review.model.PatchReviewReq
 com/example/demo/src/review/ReviewController.java
  com.example.demo.src.review.ReviewController
 com/example/demo/src/user/model/Profile.java

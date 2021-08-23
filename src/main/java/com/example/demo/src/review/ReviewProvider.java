@@ -47,7 +47,15 @@ public class ReviewProvider {
             }
 
             return getReviews;
-        
+
     }
 
+    public int checkItemExist(int restaurantIdx){return reviewDao.checkItemExist(restaurantIdx);}
+
+
+    public int checkReviewExist(int reviewIdx){return reviewDao.checkReviewExist(reviewIdx);}
+
+    public int checkStatus(int reviewIdx, int userIdx) {
+        return reviewDao.checkStatus(reviewIdx, userIdx);
+    }
 }
