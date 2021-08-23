@@ -17,6 +17,7 @@ public class GetRestaurantInfo {
     private List<String> images = new ArrayList<>();
     private float rating;
     private String location;
+    private String ground;
     private int views;
     private int reviews;
     private int wish;

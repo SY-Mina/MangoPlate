@@ -144,7 +144,7 @@ public class RestaurantDao {
     }
 
     public GetRestaurantInfo getRestaurantInfo(int restaurantIdx) {
-        return this.jdbcTemplate.queryForObject("select Restaurant.idx as restaurantIdx, name, rating, location,\n" +
+        return this.jdbcTemplate.queryForObject("select Restaurant.idx as restaurantIdx, name, rating, location,groundNum,\n" +
                         "       (select COUNT(View.idx)\n" +
                         "       from View\n" +
                         "       where Restaurant.idx=View.idx) as views,\n" +
@@ -162,6 +162,7 @@ public class RestaurantDao {
                         getRestaurantImages(restaurantIdx),
                         rs.getFloat("rating"),
                         rs.getString("location"),
+                        rs.getString("groundNum"),
                         rs.getInt("views"),
                         rs.getInt("reviews"),
                         rs.getInt("wish")),
