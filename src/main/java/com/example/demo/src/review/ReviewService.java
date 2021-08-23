@@ -105,4 +105,28 @@ public class ReviewService {
         }
 
     }
+
+    //POST
+    public void postHeart(int userIdx, int reviewIdx) throws BaseException {
+
+        try{
+            reviewDao.postHeart(userIdx, reviewIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+    //PATCH
+    public void patchHeart(String status, int userIdx, int reviewIdx) throws BaseException {
+
+        try{
+            reviewDao.patchHeart(status, userIdx, reviewIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }

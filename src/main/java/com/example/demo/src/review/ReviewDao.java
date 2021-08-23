@@ -153,4 +153,31 @@ public class ReviewDao {
         );
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
     }
+
+    public int checkHeart(int userIdx, int reviewIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Heart where userIdx = ? and reviewIdx = ?)",
+                int.class,
+                userIdx, reviewIdx);
+    }
+
+    public String checkStatusHeart(int userIdx, int reviewIdx) {
+        return this.jdbcTemplate.queryForObject("select status from Heart where userIdx = ? and reviewIdx = ?;" ,
+                (rs, rowNum) -> new String(
+                        rs.getString("status")),
+                userIdx, reviewIdx);
+    }
+
+    public int postHeart(int userIdx, int reviewIdx) {
+        this.jdbcTemplate.update("insert into Heart (userIdx, reviewIdx) VALUE (?,?)",
+                new Object[]{userIdx, reviewIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int patchHeart (String status, int userIdx, int reviewIdx) {
+        this.jdbcTemplate.update("update Heart set status = ? where Heart.userIdx=? and Heart.reviewIdx=?",
+                new Object[]{status, userIdx, reviewIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
 }

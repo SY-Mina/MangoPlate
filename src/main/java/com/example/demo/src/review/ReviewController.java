@@ -230,4 +230,54 @@ public class ReviewController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /**
+     * 리뷰 좋아요하기 API
+     * [POST] /reviews/:reviewIdx/heart
+     * @return BaseResponse<String>
+     */
+    // Path-variable
+    @ResponseBody
+    @PostMapping("/{reviewIdx}/heart") // (GET) 127.0.0.1:9000/app/reviews/my
+    public BaseResponse<String> postHeart(@PathVariable("reviewIdx") int reviewIdx) throws BaseException {
+        try{
+            if (reviewProvider.checkReviewExist(reviewIdx) == 0) {
+                return new BaseResponse<>(GET_REVIEW_EMPTY);
+            }
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+
+                // 하트 새로 만듬.
+                if (reviewProvider.checkHeart(userIdx, reviewIdx)==0) {
+                    reviewService.postHeart(userIdx, reviewIdx);
+                    String result ="T";
+                    return new BaseResponse<>(result);
+                }
+                else {
+                    // 하트 T->F
+                    if (reviewProvider.checkStatusHeart(userIdx, reviewIdx).equals("T")) {
+                        reviewService.patchHeart("F", userIdx, reviewIdx);
+
+                        String result ="F";
+                        return new BaseResponse<>(result);
+                    }
+                    // 하트 F->T
+                    else {
+                        reviewService.patchHeart("T", userIdx, reviewIdx);
+
+                        String result ="T";
+                        return new BaseResponse<>(result);
+                    }
+
+                }
+            }
+
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

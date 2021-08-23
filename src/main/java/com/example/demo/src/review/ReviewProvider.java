@@ -58,4 +58,11 @@ public class ReviewProvider {
     public int checkStatus(int reviewIdx, int userIdx) {
         return reviewDao.checkStatus(reviewIdx, userIdx);
     }
+
+    public int checkHeart(int userIdx, int reviewIdx) {
+        return reviewDao.checkHeart(userIdx, reviewIdx);
+    }
+
+    public String checkStatusHeart(int userIdx, int reviewIdx) {
+        return reviewDao.checkStatusHeart(userIdx, reviewIdx);}
 }
