@@ -132,4 +132,25 @@ public class ReviewDao {
         );
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
     }
+
+    public int patchReviewRate (int reviewIdx,int rateType) {
+        this.jdbcTemplate.update("update Review set rateType = ? where Review.idx = ?",
+                new Object[]{rateType, reviewIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int patchReviewContent (int reviewIdx,String content) {
+        this.jdbcTemplate.update("update Review set content = ? where Review.idx = ?",
+                new Object[]{content, reviewIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int patchReviewContentRate (int reviewIdx,String content, int rateType) {
+        this.jdbcTemplate.update("update Review set content = ?, rateType=? where Review.idx = ?",
+                new Object[]{content, rateType, reviewIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
 }

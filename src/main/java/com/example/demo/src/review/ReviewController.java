@@ -175,8 +175,8 @@ public class ReviewController {
      */
     // Path-variable
     @ResponseBody
-    @PostMapping("/{reviewIdx}") // (GET) 127.0.0.1:9000/app/reviews/:reviewIdx/status
-    public BaseResponse<String> patchItemStatus (@PathVariable("reviewIdx") int reviewIdx,@RequestBody PatchReviewReq patchReviewReq) throws BaseException, IOException {
+    @PatchMapping("/{reviewIdx}") // (GET) 127.0.0.1:9000/app/reviews/:reviewIdx/status
+    public BaseResponse<String> patchItemStatus (@PathVariable("reviewIdx") int reviewIdx,@ModelAttribute PatchReviewReq patchReviewReq) throws BaseException, IOException {
         try{
             if (reviewProvider.checkReviewExist(reviewIdx) == 0) {
                 return new BaseResponse<>(GET_REVIEW_EMPTY);
@@ -191,25 +191,29 @@ public class ReviewController {
                 int userIdx = jwtService.getUserIdx();
 
                 if (reviewProvider.checkStatus(reviewIdx, userIdx)==0) {
-                    return new BaseResponse<>(PATCH_USER_INVALID_STATUS);
+                    return new BaseResponse<>(PATCH_USER_INVALID);
                 }
-//                if (patchReviewReq.getContent()==null) {
-//                    if (patchReviewReq.getRateType() == null) {
-//                        String result ="수정한게 없습니다.";
-//                        return new BaseResponse<>(result);
-//                    }
-//                    else {
-//                        reviewService.patchReview(patchReviewReq.getRateType());
-//                    }
-//                }
-//                else {
-//                    if (patchReviewReq.getRateType() == null) {
-//                        reviewService.patchReview(patchReviewReq.getContent());
-//                    }
-//                    else {
-//                        reviewService.patchReview(patchReviewReq.getContent(), patchReviewReq.getRateType());
-//                    }
-//                }
+                if (patchReviewReq.getContent().length()<1) {
+                    if (patchReviewReq.getRateType() == 1 | patchReviewReq.getRateType()==2
+                            | patchReviewReq.getRateType() == 3) {
+                        reviewService.patchReview(reviewIdx, patchReviewReq.getRateType());
+                    }
+                    else {
+
+                        String result ="수정한게 없습니다.";
+                        return new BaseResponse<>(result);
+                    }
+                }
+                else {
+                    if (patchReviewReq.getRateType() == 1 | patchReviewReq.getRateType()==2
+                        | patchReviewReq.getRateType() == 3) {
+                        reviewService.patchReview(reviewIdx, patchReviewReq.getContent(), patchReviewReq.getRateType());
+
+                    }
+                    else {
+                        reviewService.patchReview(reviewIdx, patchReviewReq.getContent());
+                    }
+                }
                 List<MultipartFile> images = patchReviewReq.getImage();
                 int size = images.size();
                 for (int i=0; i<size; i++) {

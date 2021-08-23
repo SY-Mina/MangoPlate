@@ -71,4 +71,38 @@ public class ReviewService {
         }
 
     }
+
+    //PATCH
+    public void patchReview(int reviewIdx, int rateType) throws BaseException {
+
+        try{
+            reviewDao.patchReviewRate(reviewIdx, rateType);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+    //PATCH
+    public void patchReview(int reviewIdx, String content) throws BaseException {
+
+        try{
+            reviewDao.patchReviewContent(reviewIdx, content);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+    //PATCH
+    public void patchReview(int reviewIdx, String content, int rateType) throws BaseException {
+
+        try{
+            reviewDao.patchReviewContentRate(reviewIdx, content, rateType);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }
