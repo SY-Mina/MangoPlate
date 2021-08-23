@@ -25,7 +25,7 @@ public class ReviewDao {
         String getReviewImagesQuery = "select (select type from RateType where Review.rateType=RateType.idx) as type,\n" +
                 "       Review.idx as reviewIdx, restaurantIdx,\n" +
                 "       (select name from Restaurant where Restaurant.idx=restaurantIdx) as store,\n" +
-                "       content,\n" +
+                "       (select region from Restaurant where Restaurant.idx=restaurantIdx) as location,content,\n" +
                 "       concat('좋아요 ',(select COUNT(Heart.idx)\n" +
                 "       from Heart where Heart.reviewIdx=Review.idx), '개') as heart,\n" +
                 "       concat('댓글 ', (select COUNT(ReviewComment.idx)\n" +
@@ -68,6 +68,7 @@ public class ReviewDao {
                             rs.getInt("reviewIdx"),
                             rs.getInt("restaurantIdx"),
                             rs.getString("store"),
+                            rs.getString("location"),
                             rs.getString("content"),
                             rs.getString("heart"),
                             rs.getString("comments"),

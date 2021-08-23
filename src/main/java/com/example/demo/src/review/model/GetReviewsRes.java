@@ -15,6 +15,7 @@ public class GetReviewsRes {
     private int reviewIdx;
     private int restaurantIdx;
     private String store;
+    private String location;
     private String content;
     private String heart;
     private String comments;
