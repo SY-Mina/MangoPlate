@@ -2,6 +2,8 @@ com/example/demo/src/review/model/PostReviewReq.java
  com.example.demo.src.review.model.PostReviewReq
 com/example/demo/src/restaurant/RestaurantService.java
  com.example.demo.src.restaurant.RestaurantService
+com/example/demo/src/review/model/PostCommentReq.java
+ com.example.demo.src.review.model.PostCommentReq
 com/example/demo/config/Constant.java
  com.example.demo.config.Constant
 com/example/demo/src/review/ReviewDao.java

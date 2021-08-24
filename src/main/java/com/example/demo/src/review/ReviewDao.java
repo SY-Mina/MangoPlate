@@ -181,4 +181,32 @@ public class ReviewDao {
         );
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
     }
+
+
+    public int postCommentMention(int userIdx, int reviewIdx, int mentionIdx, String content) {
+        this.jdbcTemplate.update("insert into ReviewComment (userIdx, reviewIdx, mentionIdx, content) VALUE (?,?,?,?)",
+                new Object[]{userIdx, reviewIdx, mentionIdx, content}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+
+    public int postComment(int userIdx, int reviewIdx, String content) {
+        this.jdbcTemplate.update("insert into ReviewComment (userIdx, reviewIdx, content) VALUE (?,?,?)",
+                new Object[]{userIdx, reviewIdx, content}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int checkReviewMention(int reviewIdx, int mentionIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Review where idx=? and userIdx=?);",
+                int.class,
+                reviewIdx, mentionIdx);
+    }
+
+    public int checkCommentMention(int reviewIdx, int mentionIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from ReviewComment where reviewIdx=? and userIdx=?);",
+                int.class,
+                reviewIdx, mentionIdx);
+    }
 }

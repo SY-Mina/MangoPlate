@@ -129,4 +129,29 @@ public class ReviewService {
         }
 
     }
+
+
+    //POST
+    public void postComment(int userIdx, int reviewIdx, int mentionIdx, String content) throws BaseException {
+
+        try{
+            reviewDao.postCommentMention(userIdx, reviewIdx, mentionIdx, content);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+    //POST
+    public void postComment(int userIdx, int reviewIdx, String content) throws BaseException {
+
+        try{
+            reviewDao.postComment(userIdx, reviewIdx, content);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }

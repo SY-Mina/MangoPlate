@@ -1,0 +1,20 @@
+package com.example.demo.src.review.model;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class PostCommentReq {
+    private int mentionIdx;
+    private String content;
+
+    public PostCommentReq() {}
+}

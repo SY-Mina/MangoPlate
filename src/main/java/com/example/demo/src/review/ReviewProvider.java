@@ -65,4 +65,20 @@ public class ReviewProvider {
 
     public String checkStatusHeart(int userIdx, int reviewIdx) {
         return reviewDao.checkStatusHeart(userIdx, reviewIdx);}
+
+
+    public int checkMention(int reviewIdx, int mentionIdx) {
+        //멘션은 작성자랑 댓글 쓴 사람만 할 수 있음
+        //작성자인지 확인
+            if (reviewDao.checkReviewMention(reviewIdx, mentionIdx)==1) {
+                return 1;
+            }
+            //댓글 쓴 사람인지 확인
+            else {
+                if (reviewDao.checkCommentMention(reviewIdx, mentionIdx)==1) {
+                    return 1;
+                }
+                else return 0;
+            }
+        }
 }

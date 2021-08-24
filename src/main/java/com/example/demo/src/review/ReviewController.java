@@ -280,4 +280,45 @@ public class ReviewController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
+    /**
+     * 리뷰 댓글달기 API
+     * [POST] /reviews/:reviewIdx/comment
+     * @return BaseResponse<String>
+     */
+    // Path-variable
+    @ResponseBody
+    @PostMapping("/{reviewIdx}/comment") // (GET) 127.0.0.1:9000/app/reviews/:reviewIdx/comment
+    public BaseResponse<String> postComment(@PathVariable("reviewIdx") int reviewIdx, @RequestBody PostCommentReq postCommentReq) throws BaseException {
+        try{
+            if (reviewProvider.checkReviewExist(reviewIdx) == 0) {
+                return new BaseResponse<>(GET_REVIEW_EMPTY);
+            }
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            if (reviewProvider.checkMention(reviewIdx, postCommentReq.getMentionIdx())==0) {
+                return new BaseResponse<>(GET_MENTION_INVALID);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+
+                if (postCommentReq.getMentionIdx() == 0) {
+                    reviewService.postComment(userIdx, reviewIdx, postCommentReq.getContent());
+                }
+                else {
+                    reviewService.postComment(userIdx, reviewIdx, postCommentReq.getMentionIdx(), postCommentReq.getContent());
+                }
+
+
+                String result ="Success";
+                return new BaseResponse<>(result);
+            }
+
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

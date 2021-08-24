@@ -36,6 +36,7 @@ public enum BaseResponseStatus {
     GET_REVIEW_TYPE_EMPTY(false, 2022, "종류는 한가지 이상 선택해주세요."),
     POST_REVIEW_INVALID_RATETYPE(false, 2023, "종류를 다시 확인해주세요."),
     POST_REVIEW_INVALID_CONTENT(false, 2024, "게시물은 1000자 이내로 작성해주세요."),
+    GET_MENTION_INVALID(false, 2025, "리뷰를 쓴 사람과 댓글을 남긴 사람만 언급할 수 있습니다."),
 
     /**
      * 3000 : Response 오류
