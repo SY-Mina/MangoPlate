@@ -95,6 +95,101 @@ public class ReviewDao {
         return images;
     }
 
+    public List<GetReviewComment> getReviewComments(int reviewIdx) {
+        String getReviewImagesQuery = "select userIdx, (select userName from User where idx=userIdx) as userName,\n" +
+                "       (select profImg from User where idx=userIdx) as profImg,\n" +
+                "       (select holic21 from User where idx=userIdx) as holic21,\n" +
+                "       concat('@',(select userName from User where idx=ReviewComment.mentionIdx)) as mention,\n" +
+                "       content,\n" +
+                "       (case\n" +
+                "           when DATEDIFF(now(), ReviewComment.updatedAt)>=30\n" +
+                "           then concat(TIMESTAMPDIFF(MONTH , ReviewComment.updatedAt, now()), '달 전')\n" +
+                "           when DATEDIFF(now(), ReviewComment.updatedAt)>=1\n" +
+                "           then concat(DATEDIFF(now(), ReviewComment.updatedAt), '일 전')\n" +
+                "           when TIMESTAMPDIFF(Hour, ReviewComment.updatedAt, now())>=1\n" +
+                "           then concat(TIMESTAMPDIFF(Hour, ReviewComment.updatedAt, now()), '시간 전')\n" +
+                "           when TIMESTAMPDIFF(minute, ReviewComment.updatedAt, now())>=1\n" +
+                "           then concat(TIMESTAMPDIFF(minute, ReviewComment.updatedAt, now()), '분 전')\n" +
+                "           else concat(TIMESTAMPDIFF(second , ReviewComment.updatedAt, now()), '초 전')\n" +
+                "           end) as date\n" +
+                "from ReviewComment\n" +
+                "where reviewIdx= ? and status='T';";
+        List<GetReviewComment> comments = this.jdbcTemplate.query(getReviewImagesQuery,
+                (rs,rowNum) -> new GetReviewComment(
+                        rs.getInt("userIdx"),
+                        rs.getString("userName"),
+                        rs.getString("profImg"),
+                        rs.getString("holic21"),
+                        rs.getString("mention"),
+                        rs.getString("content"),
+                        rs.getString("date")),
+                reviewIdx);
+
+        return comments;
+    }
+
+    public GetReviewDetailRes getReview(int reviewIdx, int userIdx){
+        return this.jdbcTemplate.queryForObject("select (select type from RateType where Review.rateType=RateType.idx) as type,\n" +
+                        "       Review.idx as reviewIdx, restaurantIdx,\n" +
+                        "       (select name from Restaurant where Restaurant.idx=restaurantIdx) as store,\n" +
+                        "       (select region from Restaurant where Restaurant.idx=restaurantIdx) as location,content,\n" +
+                        "       concat('좋아요 ',(select COUNT(Heart.idx)\n" +
+                        "       from Heart where Heart.reviewIdx=Review.idx), '개') as heart,\n" +
+                        "       concat('댓글 ', (select COUNT(ReviewComment.idx)\n" +
+                        "           from ReviewComment where ReviewComment.reviewIdx=Review.idx), '개') as comments,\n" +
+                        "       (case\n" +
+                        "           when DATEDIFF(now(), Review.updatedAt)>=30\n" +
+                        "           then concat(TIMESTAMPDIFF(MONTH , Review.updatedAt, now()), '달 전')\n" +
+                        "           when DATEDIFF(now(), Review.updatedAt)>=1\n" +
+                        "           then concat(DATEDIFF(now(), Review.updatedAt), '일 전')\n" +
+                        "           when TIMESTAMPDIFF(Hour, Review.updatedAt, now())>=1\n" +
+                        "           then concat(TIMESTAMPDIFF(Hour, Review.updatedAt, now()), '시간 전')\n" +
+                        "           when TIMESTAMPDIFF(minute, Review.updatedAt, now())>=1\n" +
+                        "           then concat(TIMESTAMPDIFF(minute, Review.updatedAt, now()), '분 전')\n" +
+                        "           else concat(TIMESTAMPDIFF(second , Review.updatedAt, now()), '초 전')\n" +
+                        "           end) as date,\n" +
+                        "       userIdx, (select userName from User where User.idx=userIdx) as userName,\n" +
+                        "       (select count(Review.idx) from Review\n" +
+                        "        where Review.userIdx=U.idx) as reviews,\n" +
+                        "       (select count(Follow.idx) from Follow\n" +
+                        "        where Follow.userIdx=U.idx) as followers,\n" +
+                        "       (select (case\n" +
+                        "            when (select exists(select Wish.idx from Wish\n" +
+                        "                where Wish.userIdx=? and Wish.restaurantIdx=Review.restaurantIdx) = 0)\n" +
+                        "            then 'F'\n" +
+                        "            when (select exists(select Wish.idx from Wish\n" +
+                        "                where Wish.userIdx=? and Wish.restaurantIdx=Review.restaurantIdx) = 1)\n" +
+                        "            then 'T' end)) as myWish,\n" +
+                        "       (select (case\n" +
+                        "            when (select exists(select Heart.idx from Heart\n" +
+                        "                where Heart.userIdx=? and Heart.reviewIdx=Review.idx) = 0)\n" +
+                        "            then 'F'\n" +
+                        "            when (select exists(select Heart.idx from Heart\n" +
+                        "                where Heart.userIdx=? and Heart.reviewIdx=Review.idx) = 1)\n" +
+                        "            then 'T' end)) as myHeart\n" +
+                        "from Review inner join User U on Review.userIdx = U.idx\n" +
+                        "where Review.idx=?;" ,
+                (rs, rowNum) -> new GetReviewDetailRes(
+                        rs.getString("type"),
+                        rs.getInt("reviewIdx"),
+                        rs.getInt("restaurantIdx"),
+                        rs.getString("store"),
+                        rs.getString("location"),
+                        rs.getString("content"),
+                        rs.getString("heart"),
+                        rs.getString("comments"),
+                        rs.getString("date"),
+                        getReviewImages(rs.getInt("reviewIdx")),
+                        rs.getInt("userIdx"),
+                        rs.getString("userName"),
+                        rs.getInt("reviews"),
+                        rs.getInt("followers"),
+                        rs.getString("myWish"),
+                        rs.getString("myHeart"),
+                        getReviewComments(reviewIdx)),
+                userIdx, userIdx, userIdx, userIdx, reviewIdx);
+    }
+
     public int postReview(int userIdx, int restaurantIdx, int rateType, String content) {
         this.jdbcTemplate.update("insert into Review (userIdx, restaurantIdx, rateType, content) VALUE (?,?,?,?)",
                 new Object[]{userIdx, restaurantIdx, rateType, content}

@@ -321,4 +321,33 @@ public class ReviewController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /**
+     * 소식에서 리뷰 조회 API
+     * [GET] /reviews/:reviewIdx
+     * @return BaseResponse<List<GetReviewsRes>>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/{reviewIdx}") // (GET) 127.0.0.1:9000/app/reviews
+    public BaseResponse<GetReviewDetailRes> getReview(@PathVariable("reviewIdx") int reviewIdx) {
+
+        try{
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            if (reviewProvider.checkReviewExist(reviewIdx) == 0) {
+                return new BaseResponse<>(GET_REVIEW_EMPTY);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+
+                GetReviewDetailRes getReview = reviewProvider.getReview(reviewIdx, userIdx);
+                return new BaseResponse<>(getReview);
+            }
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
 }

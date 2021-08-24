@@ -81,4 +81,15 @@ public class ReviewProvider {
                 else return 0;
             }
         }
+
+
+    public GetReviewDetailRes getReview(int reviewIdx, int userIdx) throws BaseException {
+
+
+            GetReviewDetailRes getReviewDetail = reviewDao.getReview(reviewIdx, userIdx);
+            return getReviewDetail;
+
+
+
+    }
 }

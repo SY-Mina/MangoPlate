@@ -36,6 +36,8 @@ com/example/demo/src/review/ReviewController.java
  com.example.demo.src.review.ReviewController
 com/example/demo/src/user/model/Profile.java
  com.example.demo.src.user.model.Profile
+com/example/demo/src/review/model/GetReviewDetailRes.java
+ com.example.demo.src.review.model.GetReviewDetailRes
 com/example/demo/src/restaurant/model/Reviews.java
  com.example.demo.src.restaurant.model.Reviews
 com/example/demo/config/secret/Secret.java
@@ -88,6 +90,8 @@ com/example/demo/src/user/model/PostLoginReq.java
  com.example.demo.src.user.model.PostLoginReq
 com/example/demo/src/restaurant/model/GetRestDetailRes.java
  com.example.demo.src.restaurant.model.GetRestDetailRes
+com/example/demo/src/review/model/GetReviewComment.java
+ com.example.demo.src.review.model.GetReviewComment
 com/example/demo/src/review/ReviewProvider.java
  com.example.demo.src.review.ReviewProvider
 com/example/demo/src/user/UserController.java
