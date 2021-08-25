@@ -85,11 +85,32 @@ public class ReviewProvider {
 
     public GetReviewDetailRes getReview(int reviewIdx, int userIdx) throws BaseException {
 
-
             GetReviewDetailRes getReviewDetail = reviewDao.getReview(reviewIdx, userIdx);
             return getReviewDetail;
 
+    }
 
+    public List<GetReviewStoresRes> getReviewStoresNull() throws BaseException{
+
+        List<GetReviewStoresRes> getReviews = reviewDao.getReviewStoresNull();
+
+        return getReviews;
+
+    }
+
+    public List<GetReviewStoresRes> getReviewStores(String keyword) throws BaseException{
+
+        List<GetReviewStoresRes> getReviews = reviewDao.getReviewStores(keyword);
+
+        return getReviews;
+
+    }
+
+    public List<GetEatdealRes> getEatdeal() throws BaseException{
+
+        List<GetEatdealRes> getEatdeal = reviewDao.getEatdeal();
+
+        return getEatdeal;
 
     }
 }

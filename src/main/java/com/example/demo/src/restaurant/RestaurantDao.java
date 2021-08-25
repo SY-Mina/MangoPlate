@@ -363,6 +363,32 @@ public class RestaurantDao {
                 restaurantIdx);
     }
 
+    public List<GetStoresSearchRes> getStoreSearch(String keyword) {
+        String keywordForQuery = '%' + keyword + '%';
+        return this.jdbcTemplate.query("select idx as restaurantIdx, name,\n" +
+                        "       (select url from ReviewImage inner join Review\n" +
+                        "        where ReviewImage.reviewIdx=Review.idx\n" +
+                        "        and Review.restaurantIdx=Restaurant.idx limit 1) as profImg,\n" +
+                        "       rating, Restaurant.region as location,\n" +
+                        "       (select COUNT(View.idx)\n" +
+                        "       from View\n" +
+                        "       where Restaurant.idx=View.idx) as views,\n" +
+                        "       (select COUNT(Review.idx)\n" +
+                        "           from Review\n" +
+                        "           where Restaurant.idx=Review.restaurantIdx) as reviews\n" +
+                        "from Restaurant\n" +
+                        "where name like ?;",
+                (rs, rowNum) -> new GetStoresSearchRes(
+                        rs.getInt("restaurantIdx"),
+                        rs.getString("name"),
+                        rs.getString("profImg"),
+                        rs.getFloat("rating"),
+                        rs.getString("location"),
+                        rs.getInt("views"),
+                        rs.getInt("reviews")),
+                keywordForQuery);
+    }
+
     public int checkHeart(int userIdx, int restaurantIdx) {
         return this.jdbcTemplate.queryForObject("select exists(select idx from Wish where userIdx = ? and restaurantIdx = ?)",
                 int.class,

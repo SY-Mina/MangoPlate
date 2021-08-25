@@ -190,6 +190,53 @@ public class ReviewDao {
                 userIdx, userIdx, userIdx, userIdx, reviewIdx);
     }
 
+
+    public List<GetReviewStoresRes> getReviewStoresNull() {
+        return this.jdbcTemplate.query("select (select name from RestaurantType where type=idx) as type,\n" +
+                        "       idx as restaurantIdx, name as store, Restaurant.region as location\n" +
+                        "from Restaurant;",
+                (rs, rowNum) -> new GetReviewStoresRes(
+                        rs.getString("type"),
+                        rs.getInt("restaurantIdx"),
+                        rs.getString("store"),
+                        rs.getString("location")));
+    }
+
+
+    public List<GetReviewStoresRes> getReviewStores(String keyword) {
+        String keywordForQuery = '%' + keyword + '%';
+        return this.jdbcTemplate.query("select (select name from RestaurantType where type=idx) as type,\n" +
+                        "       idx as restaurantIdx, name as store, Restaurant.region as location\n" +
+                        "from Restaurant\n" +
+                        "where name like ?;",
+                (rs, rowNum) -> new GetReviewStoresRes(
+                        rs.getString("type"),
+                        rs.getInt("restaurantIdx"),
+                        rs.getString("store"),
+                        rs.getString("location")),
+                keywordForQuery);
+    }
+
+    public List<GetEatdealRes> getEatdeal() {
+        return this.jdbcTemplate.query("select idx as eatdealIdx, restaurantIdx,\n" +
+                        "       (select name from Restaurant where Restaurant.idx=restaurantIdx) as store,\n" +
+                        "       (select region from Restaurant where Restaurant.idx=restaurantIdx) as region,\n" +
+                        "       content as menu, concat('W', format(price,0)) as price,\n" +
+                        "       concat('W', format(price*(100-EatDeal.discount)/100,0)) as discount,\n" +
+                        "       concat(discount, '%') as percentage, description\n" +
+                        "from EatDeal;",
+                (rs, rowNum) -> new GetEatdealRes(
+                        rs.getInt("eatdealIdx"),
+                        rs.getInt("restaurantIdx"),
+                        rs.getString("store"),
+                        rs.getString("region"),
+                        rs.getString("menu"),
+                        rs.getString("price"),
+                        rs.getString("discount"),
+                        rs.getString("percentage"),
+                        rs.getString("description")));
+    }
+
     public int postReview(int userIdx, int restaurantIdx, int rateType, String content) {
         this.jdbcTemplate.update("insert into Review (userIdx, restaurantIdx, rateType, content) VALUE (?,?,?,?)",
                 new Object[]{userIdx, restaurantIdx, rateType, content}
@@ -277,7 +324,6 @@ public class ReviewDao {
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
     }
 
-
     public int postCommentMention(int userIdx, int reviewIdx, int mentionIdx, String content) {
         this.jdbcTemplate.update("insert into ReviewComment (userIdx, reviewIdx, mentionIdx, content) VALUE (?,?,?,?)",
                 new Object[]{userIdx, reviewIdx, mentionIdx, content}
@@ -293,6 +339,7 @@ public class ReviewDao {
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
     }
 
+    // Check
     public int checkReviewMention(int reviewIdx, int mentionIdx) {
         return this.jdbcTemplate.queryForObject("select exists(select idx from Review where idx=? and userIdx=?);",
                 int.class,

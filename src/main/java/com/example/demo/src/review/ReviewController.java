@@ -350,4 +350,54 @@ public class ReviewController {
         }
 
     }
+
+    /**
+     * 리뷰에서 올릴 식당 조회 API
+     * [GET] /reviews/stores?keyword=
+     * @return BaseResponse<List<GetReviewStoresRes>>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/stores") // (GET) 127.0.0.1:9000/app/reviews
+    public BaseResponse<List<GetReviewStoresRes>> getReviewStores(@RequestParam("keyword") String keyword) {
+
+        try{
+            if (keyword.length()<1) {
+                List<GetReviewStoresRes> getReviewStores = reviewProvider.getReviewStoresNull();
+                return new BaseResponse<>(getReviewStores);
+            }
+            else {
+                List<GetReviewStoresRes> getReviewStores = reviewProvider.getReviewStores(keyword);
+                if (getReviewStores.size()==0) {
+                    return new BaseResponse<>(GET_STORES_SEARCH_EMPTY);
+                }
+                return new BaseResponse<>(getReviewStores);
+            }
+
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+    /**
+     * EAT딜 조회 API
+     * [GET] /reviews/stores/eatdeal
+     * @return BaseResponse<List<GetReviewStoresRes>>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/stores/eatdeal") // (GET) 127.0.0.1:9000/app/reviews
+    public BaseResponse<List<GetEatdealRes>> getEatdeal() {
+
+        try{
+            List<GetEatdealRes> getEatdeal = reviewProvider.getEatdeal();
+            return new BaseResponse<>(getEatdeal);
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
 }

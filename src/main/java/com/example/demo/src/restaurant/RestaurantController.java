@@ -231,4 +231,24 @@ public class RestaurantController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /**
+     * 식당 검색하기 API
+     * [GET] /reviews/stores/eatdeal
+     * @return BaseResponse<List<GetReviewStoresRes>>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/search") // (GET) 127.0.0.1:9000/app/reviews
+    public BaseResponse<List<GetStoresSearchRes>> getStoreSearch(@RequestParam("keyword") String keyword) {
+
+        try{
+            List<GetStoresSearchRes> getStoreSearch = restaurantProvider.getStoreSearch(keyword);
+            return new BaseResponse<>(getStoreSearch);
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
 }

@@ -233,6 +233,54 @@ public class UserController {
 
     }
 
+    /**
+     * 사용자 팔로우하기 API
+     * [POST] /user/follow/{userIdx}
+     * @return BaseResponse<GetRecommendRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @PatchMapping("/follow/{userIdx}") // (GET) 127.0.0.1:9000/app/items/heart
+    public BaseResponse<String> patchFollow(@PathVariable("userIdx") int followIdx) throws BaseException {
+        try{
+            if (userProvider.checkUserExists(followIdx) == 0) {
+                return new BaseResponse<>(GET_USER_INVALID);
+            }
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+
+                // 하트 새로 만듬.
+                if (userProvider.checkFollow(userIdx, followIdx)==0) {
+                    userService.postFollow(userIdx, followIdx);
+                    String result ="T";
+                    return new BaseResponse<>(result);
+                }
+                else {
+                    // 하트 T->F
+                    if (userProvider.checkStatusFollow(userIdx, followIdx).equals("T")) {
+                        userService.patchFollow("F", userIdx, followIdx);
+
+                        String result ="F";
+                        return new BaseResponse<>(result);
+                    }
+                    // 하트 F->T
+                    else {
+                        userService.patchFollow("T", userIdx, followIdx);
+
+                        String result ="T";
+                        return new BaseResponse<>(result);
+                    }
+
+                }
+
+            }
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
     /**
      * 카카오 로그인 API

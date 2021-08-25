@@ -38,6 +38,7 @@ public enum BaseResponseStatus {
     POST_REVIEW_INVALID_CONTENT(false, 2024, "게시물은 1000자 이내로 작성해주세요."),
     GET_MENTION_INVALID(false, 2025, "리뷰를 쓴 사람과 댓글을 남긴 사람만 언급할 수 있습니다."),
 
+
     /**
      * 3000 : Response 오류
      */
@@ -56,6 +57,7 @@ public enum BaseResponseStatus {
     PATCH_USER_INVALID_STATUS(false, 3018, "삭제할 권한이 없는 사용자입니다."),
     PATCH_USER_INVALID(false, 3019, "수정할 권한이 없는 사용자입니다."),
 
+    GET_STORES_SEARCH_EMPTY(false, 3020, "등록된 식당이 없어요."),
     /**
      * 4000 : Database, Server 오류
      */

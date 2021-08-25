@@ -1,5 +1,7 @@
 com/example/demo/src/review/model/PostReviewReq.java
  com.example.demo.src.review.model.PostReviewReq
+com/example/demo/src/restaurant/model/GetStoresSearchRes.java
+ com.example.demo.src.restaurant.model.GetStoresSearchRes
 com/example/demo/src/restaurant/RestaurantService.java
  com.example.demo.src.restaurant.RestaurantService
 com/example/demo/src/review/model/PostCommentReq.java
@@ -68,6 +70,8 @@ com/example/demo/src/restaurant/model/PostHeartReq.java
  com.example.demo.src.restaurant.model.PostHeartReq
 com/example/demo/src/review/model/GetReviewsRes.java
  com.example.demo.src.review.model.GetReviewsRes
+com/example/demo/src/review/model/GetEatdealRes.java
+ com.example.demo.src.review.model.GetEatdealRes
 com/example/demo/src/user/UserDao.java
  com.example.demo.src.user.UserDao
 com/example/demo/src/restaurant/model/GetMyRestaurantInfo.java
@@ -84,6 +88,8 @@ com/example/demo/src/WebSecurityConfig.java
  com.example.demo.src.WebSecurityConfig
 com/example/demo/src/test/TestController.java
  com.example.demo.src.test.TestController
+com/example/demo/src/review/model/GetReviewStoresRes.java
+ com.example.demo.src.review.model.GetReviewStoresRes
 com/example/demo/src/review/model/MyInfo.java
  com.example.demo.src.review.model.MyInfo
 com/example/demo/src/user/model/PostLoginReq.java

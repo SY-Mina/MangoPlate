@@ -96,4 +96,12 @@ public class RestaurantProvider {
 
     public String checkStatusHeart(int userIdx, int itemIdx) {
         return restaurantDao.checkStatusHeart(userIdx, itemIdx);}
+
+    public List<GetStoresSearchRes> getStoreSearch(String keyword) throws BaseException{
+
+        List<GetStoresSearchRes> getEatdeal = restaurantDao.getStoreSearch(keyword);
+
+        return getEatdeal;
+
+    }
 }
