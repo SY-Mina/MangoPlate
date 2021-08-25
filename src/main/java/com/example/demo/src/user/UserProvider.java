@@ -93,5 +93,9 @@ public class UserProvider {
 
     public int checkUserExists(int userIdx) {return userDao.checkUserExist(userIdx);}
 
+    public int checkFollow(int userIdx, int followIdx) {return userDao.checkFollow(userIdx, followIdx);}
 
+
+
+    public String checkStatusFollow(int userIdx, int followIdx) {return userDao.checkStatusFollow(userIdx, followIdx);}
 }

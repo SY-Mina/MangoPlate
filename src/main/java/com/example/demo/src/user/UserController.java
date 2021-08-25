@@ -11,6 +11,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
+import com.example.demo.utils.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,38 +43,18 @@ public class UserController {
     private final UserService userService;
     @Autowired
     private final JwtService jwtService;
+    @Autowired
+    private final S3Uploader s3Uploader;
 
 
 
-
-    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService){
+    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService,S3Uploader s3Uploader){
         this.userProvider = userProvider;
         this.userService = userService;
         this.jwtService = jwtService;
+        this.s3Uploader = s3Uploader;
     }
 
-
-
-    /**
-     * 회원 조회 API
-     * [GET] /users
-     * 회원 번호 및 이메일 검색 조회 API
-     * [GET] /users?userIdx= && Email=
-     * @return BaseResponse<List<GetUserRes>>
-     */
-    //Query String
-//    @ResponseBody
-//    @GetMapping("") // (GET) 127.0.0.1:9000/app/users
-//    public BaseResponse<List<GetUserRes>> getUsers() {
-//        try {
-//            // Get Users
-//            List<GetUserRes> getUsersRes = userProvider.getUsers();
-//            return new BaseResponse<>(getUsersRes);
-//        }
-//        catch (BaseException exception) {
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//    }
 
     /**
      * 내 정보 조회 API
@@ -181,30 +163,38 @@ public class UserController {
     }
 
     /**
-     * 유저정보변경 API
-     * [PATCH] /users/:userIdx
+     * 유저 이름, 프로필 사진 변경 API
+     * [PATCH] /users
      * @return BaseResponse<String>
      */
-//    @ResponseBody
-//    @PatchMapping("/{userIdx}")
-//    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserReq user){
-//        try {
-//            //jwt에서 idx 추출.
-//            int userIdxByJwt = jwtService.getUserIdx();
-//            //userIdx와 접근한 유저가 같은지 확인
-//            if(userIdx != userIdxByJwt){
-//                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
-//            }
-//            //같다면 유저네임 변경
-//            PatchUserReq patchUserReq = new PatchUserReq(user.getUserIdx(), user.getUserName());
-//            userService.modifyUserName(patchUserReq);
-//
-//            String result = "Success";
-//            return new BaseResponse<>(result);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//    }
+    @ResponseBody
+    @PatchMapping("")
+    public BaseResponse<String> modifyUserName(@ModelAttribute PatchUserReq user) throws BaseException, IOException {
+        try {
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+
+            else {
+                int userIdx = jwtService.getUserIdx();
+                if (user.getUserName().length() > 1) {
+                    userService.modifyUserName(user.getUserName(), userIdx);
+                }
+                else {
+                    return new BaseResponse<>(PATCH_USERS_INVALID_NAME);
+                }
+                if (!user.getImage().isEmpty()) {
+                    String url = s3Uploader.upload(user.getImage(), "profImg",1);
+                    userService.patchProfImg(userIdx, url);
+                }
+
+            }
+            String result = "Success";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
     /**
      * 추천 유저 조회 API
@@ -240,35 +230,35 @@ public class UserController {
      */
     // Path-variable
     @ResponseBody
-    @PatchMapping("/follow/{userIdx}") // (GET) 127.0.0.1:9000/app/items/heart
-    public BaseResponse<String> patchFollow(@PathVariable("userIdx") int followIdx) throws BaseException {
+    @PatchMapping("/follower/{userIdx}") // (GET) 127.0.0.1:9000/app/items/heart
+    public BaseResponse<String> patchFollow(@PathVariable("userIdx") int userIdx) throws BaseException {
         try{
-            if (userProvider.checkUserExists(followIdx) == 0) {
+            if (userProvider.checkUserExists(userIdx) == 0) {
                 return new BaseResponse<>(GET_USER_INVALID);
             }
             if (jwtService.getJwt()==null) {
                 return new BaseResponse<>(EMPTY_JWT);
             }
             else {
-                int userIdx = jwtService.getUserIdx();
+                int myIdx = jwtService.getUserIdx();
 
                 // 하트 새로 만듬.
-                if (userProvider.checkFollow(userIdx, followIdx)==0) {
-                    userService.postFollow(userIdx, followIdx);
+                if (userProvider.checkFollow(myIdx, userIdx)==0) {
+                    userService.postFollow(myIdx, userIdx);
                     String result ="T";
                     return new BaseResponse<>(result);
                 }
                 else {
                     // 하트 T->F
-                    if (userProvider.checkStatusFollow(userIdx, followIdx).equals("T")) {
-                        userService.patchFollow("F", userIdx, followIdx);
+                    if (userProvider.checkStatusFollow(myIdx, userIdx).equals("T")) {
+                        userService.patchFollow("F", myIdx, userIdx);
 
                         String result ="F";
                         return new BaseResponse<>(result);
                     }
                     // 하트 F->T
                     else {
-                        userService.patchFollow("T", userIdx, followIdx);
+                        userService.patchFollow("T", myIdx, userIdx);
 
                         String result ="T";
                         return new BaseResponse<>(result);

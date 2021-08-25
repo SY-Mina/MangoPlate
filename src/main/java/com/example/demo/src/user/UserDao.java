@@ -160,9 +160,9 @@ public class UserDao {
                 int.class, userIdx);
     }
 
-    public int modifyUserName(PatchUserReq patchUserReq){
-        String modifyUserNameQuery = "update UserInfo set userName = ? where userIdx = ? ";
-        Object[] modifyUserNameParams = new Object[]{patchUserReq.getUserName(), patchUserReq.getUserIdx()};
+    public int modifyUserName(String userName, int userIdx){
+        String modifyUserNameQuery = "update User set userName = ? where idx = ? ";
+        Object[] modifyUserNameParams = new Object[]{userName, userIdx};
 
         return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
     }
@@ -199,6 +199,39 @@ public class UserDao {
         String kakaoPwd = "kakao";
         this.jdbcTemplate.update("insert into User (userName, email, password) VALUES (?,?,?)",
                 new Object[]{nickname, email, kakaoPwd}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int checkFollow(int userIdx, int followIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Follow where userIdx = ? and followIdx = ?)",
+                int.class,
+                userIdx, followIdx);
+    }
+    public int postFollow(int userIdx, int followIdx) {
+        this.jdbcTemplate.update("insert into Follow (userIdx, followIdx) VALUE (?,?)",
+                new Object[]{userIdx, followIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public String checkStatusFollow(int userIdx, int followIdx) {
+        return this.jdbcTemplate.queryForObject("select status from Follow where userIdx = ? and followIdx = ?;" ,
+                (rs, rowNum) -> new String(
+                        rs.getString("status")),
+                userIdx, followIdx);
+    }
+
+    public int patchFollow (String status, int userIdx, int followIdx) {
+        this.jdbcTemplate.update("update Follow set status = ? where Follow.userIdx=? and Follow.followIdx=?",
+                new Object[]{status, userIdx, followIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int patchProfImg(int userIdx,String profImg) {
+        this.jdbcTemplate.update("update User set profImg = ? where User.idx=?",
+                new Object[]{profImg, userIdx}
         );
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
     }

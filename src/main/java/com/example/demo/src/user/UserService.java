@@ -60,15 +60,10 @@ public class UserService {
         }
     }
 
-    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
-        try{
-            int result = userDao.modifyUserName(patchUserReq);
-            if(result == 0){
-                throw new BaseException(MODIFY_FAIL_USERNAME);
-            }
-        } catch(Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
+    public void modifyUserName(String userName, int userIdx) throws BaseException {
+
+            int result = userDao.modifyUserName(userName, userIdx);
+        
     }
 
     public int checkKakaoUserExist(String nickname, String email){
@@ -99,5 +94,35 @@ public class UserService {
         }
 
 
+    }
+
+    public int postFollow(int userIdx, int followIdx) throws BaseException{
+        try {
+            int result = userDao.postFollow(userIdx, followIdx);
+            return result;
+        }catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    //PATCH
+    public void patchFollow(String status, int userIdx, int followIdx) throws BaseException {
+
+        try{
+            userDao.patchFollow(status, userIdx, followIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+    public int patchProfImg(int userIdx, String profImg) throws BaseException{
+        try {
+            int result = userDao.patchProfImg(userIdx, profImg);
+            return result;
+        }catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }
