@@ -81,7 +81,7 @@ public class RestaurantService {
     }
     public void patchWentPublic(int wentIdx, String publicStatus) throws BaseException {
 
-       
+
             restaurantDao.patchWentPublic( wentIdx, publicStatus);
 
 
