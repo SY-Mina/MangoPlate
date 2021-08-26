@@ -58,6 +58,7 @@ public enum BaseResponseStatus {
     PATCH_USER_INVALID(false, 3019, "수정할 권한이 없는 사용자입니다."),
 
     GET_STORES_SEARCH_EMPTY(false, 3020, "등록된 식당이 없어요."),
+    GET_WENT_EMPTY(false, 3021, "존재하지 않는 가고싶다입니다."),
     /**
      * 4000 : Database, Server 오류
      */

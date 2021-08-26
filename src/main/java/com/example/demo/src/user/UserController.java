@@ -224,6 +224,38 @@ public class UserController {
     }
 
     /**
+     * 팔로우 목록 조회 API
+     * [GET] /users/follower/:userIdx
+     * @return BaseResponse<GetFollowerRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/follower/{userIdx}") // (GET) 127.0.0.1:9000/app/users/search
+    public BaseResponse<List<GetFollowerRes>> getFollowers(@PathVariable("userIdx")int userIdx) {
+        // Get Users
+        try{
+            if (userProvider.checkUserExists(userIdx) == 0) {
+                return new BaseResponse<>(GET_USER_INVALID);
+            }
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int myIdx = jwtService.getUserIdx();
+                System.out.println("userIdx: " + myIdx);
+                List<GetFollowerRes> getFollowers = userProvider.getFollowers(myIdx, userIdx);
+                return new BaseResponse<>(getFollowers);
+            }
+
+
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+    /**
      * 사용자 팔로우하기 API
      * [POST] /user/follow/{userIdx}
      * @return BaseResponse<GetRecommendRes>
@@ -294,7 +326,7 @@ public class UserController {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", "c542e13c92062485564e91d141795de5");
-        params.add("redirect_uri", "https://minaserver.shop/app/users/login/kakao");
+        params.add("redirect_uri", "https://prod.minaserver.shop/app/users/login/kakao");
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoRequest =

@@ -68,4 +68,36 @@ public class RestaurantService {
         }
 
     }
+
+    public void patchWentStatus(int wentIdx) throws BaseException {
+
+        try{
+            restaurantDao.patchWentStatus( wentIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+    public void patchWentPublic(int wentIdx, String publicStatus) throws BaseException {
+
+       
+            restaurantDao.patchWentPublic( wentIdx, publicStatus);
+
+
+    }
+    public void patchWentContent(int wentIdx, String content) throws BaseException {
+
+
+            restaurantDao.patchWentContent( wentIdx,content);
+
+
+    }
+    public void patchWent(int wentIdx, String content, String publicStatus) throws BaseException {
+
+
+            restaurantDao.patchWent( wentIdx,content, publicStatus);
+
+
+    }
 }

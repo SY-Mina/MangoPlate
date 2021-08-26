@@ -225,7 +225,7 @@ public class RestaurantDao {
     }
 
     public List<String> getOpenTime(int restaurantIdx) {
-        String getReviewImagesQuery = "select concat(weekday, ' ', open, '-', close) as openTime\n" +
+        String getReviewImagesQuery = "select concat((IF(weekday IS NULL, '', concat(weekday, ' '))), open, '-', close) as openTime\n" +
                 "from OpenTime\n" +
                 "where OpenTime.restaurantIdx=?;";
         List<String> images = this.jdbcTemplate.query(getReviewImagesQuery,
@@ -419,6 +419,46 @@ public class RestaurantDao {
     public int postWent(int userIdx, int restaurantIdx, String status, String content) {
         this.jdbcTemplate.update("insert into Went (userIdx, restaurantIdx, public, content) VALUE (?,?,?,?)",
                 new Object[]{userIdx, restaurantIdx, status, content}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int checkWentExist(int wentIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Went where idx=?)",
+                int.class,
+                wentIdx);
+    }
+
+    public int checkStatus(int userIdx, int wentIdx) {
+        return this.jdbcTemplate.queryForObject("select exists(select idx from Went where idx=? and userIdx=?)",
+                int.class,
+                wentIdx, userIdx);
+    }
+    public int patchWentStatus (int wentIdx) {
+        this.jdbcTemplate.update("update Went set status = 'F' where idx=?",
+                new Object[]{wentIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int patchWentPublic (int wentIdx, String publicStauts) {
+        this.jdbcTemplate.update("update Went set public = ? where idx=?",
+                new Object[]{publicStauts, wentIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+    public int patchWentContent (int wentIdx, String content) {
+        this.jdbcTemplate.update("update Went set content = ? where idx=?",
+                new Object[]{content, wentIdx}
+        );
+        return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
+    }
+
+
+    public int patchWent (int wentIdx, String content, String publicStatus) {
+        this.jdbcTemplate.update("update Went set public=?, content=? where idx=?",
+                new Object[]{publicStatus,content, wentIdx}
         );
         return this.jdbcTemplate.queryForObject("select last_insert_id()",int.class);
     }

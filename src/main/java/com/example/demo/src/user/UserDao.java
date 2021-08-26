@@ -58,18 +58,44 @@ public class UserDao {
                 );
     }
 
-//    public List<GetUserRes> getUsersByEmail(String email){
-//        String getUsersByEmailQuery = "select * from User where email =?";
-//        String getUsersByEmailParams = email;
-//        return this.jdbcTemplate.query(getUsersByEmailQuery,
-//                (rs, rowNum) -> new GetUserRes(
-//                        rs.getInt("userIdx"),
-//                        rs.getString("userName"),
-//                        rs.getString("ID"),
-//                        rs.getString("Email"),
-//                        rs.getString("password")),
-//                getUsersByEmailParams);
-//    }
+    public List<GetFollowerRes> getFollowers(int myIdx, int userIdx){
+        String getUsersQuery = "select userIdx, (select userName from User where idx=userIdx) as userName,\n" +
+                "       (select profImg from User where idx=userIdx) as profImg,\n" +
+                "       (select count(idx) from Review where Review.userIdx=Follow.userIdx) as reviews\n" +
+                "from Follow\n" +
+                "where followIdx=?;";
+        return this.jdbcTemplate.query(getUsersQuery,
+                (rs,rowNum) -> new GetFollowerRes(
+                        rs.getInt("userIdx"),
+                        rs.getString("userName"),
+                        rs.getString("profImg"),
+                        rs.getInt("reviews"),
+                        getFollowerNum(rs.getInt("userIdx")),
+                        getFollowing(myIdx, rs.getInt("userIdx"))),
+                userIdx
+        );
+    }
+
+    public int getFollowerNum(int userIdx) {
+        String getUsersQuery = "select count(idx) as followers\n" +
+                "from Follow\n" +
+                "where followIdx=?;";
+        return this.jdbcTemplate.queryForObject(getUsersQuery,
+                (rs,rowNum) -> new Integer(
+                        rs.getInt("followers")),
+                userIdx);
+    }
+
+
+    public String getFollowing(int myIdx, int userIdx) {
+        String getUsersQuery = "select (case when (exists(select idx from Follow where userIdx=? and followIdx=?))=1\n" +
+                "           then 'T'\n" +
+                "           else 'F' end) as isfollowing";
+        return this.jdbcTemplate.queryForObject(getUsersQuery,
+                (rs,rowNum) -> new String(
+                        rs.getString("isfollowing")),
+                myIdx, userIdx);
+    }
 
     public GetUserRes getUser(int userIdx){
         String getUserQuery = "select User.idx as userIdx, userName,\n" +

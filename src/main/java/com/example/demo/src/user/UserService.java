@@ -63,7 +63,7 @@ public class UserService {
     public void modifyUserName(String userName, int userIdx) throws BaseException {
 
             int result = userDao.modifyUserName(userName, userIdx);
-        
+
     }
 
     public int checkKakaoUserExist(String nickname, String email){

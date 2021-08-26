@@ -46,6 +46,13 @@ public class UserProvider {
         }
     }
 
+    public List<GetFollowerRes> getFollowers(int myIdx, int userIdx) throws BaseException{
+
+            List<GetFollowerRes> followers = userDao.getFollowers(myIdx, userIdx);
+
+            return followers;
+
+    }
 
     public GetUserRes getUser(int userIdx) throws BaseException {
         GetUserRes getUserRes = userDao.getUser(userIdx);

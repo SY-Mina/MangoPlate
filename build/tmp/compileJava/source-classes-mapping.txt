@@ -16,6 +16,8 @@ com/example/demo/src/restaurant/model/GetReviewsDetail.java
  com.example.demo.src.restaurant.model.GetReviewsDetail
 com/example/demo/src/review/model/GetReviewsReq.java
  com.example.demo.src.review.model.GetReviewsReq
+com/example/demo/src/user/model/GetFollowerRes.java
+ com.example.demo.src.user.model.GetFollowerRes
 com/example/demo/utils/ValidationRegex.java
  com.example.demo.utils.ValidationRegex
 com/example/demo/src/restaurant/model/GetReviews.java
@@ -50,6 +52,8 @@ com/example/demo/src/user/model/PostUserRes.java
  com.example.demo.src.user.model.PostUserRes
 com/example/demo/config/BaseResponse.java
  com.example.demo.config.BaseResponse
+com/example/demo/src/user/model/Follower.java
+ com.example.demo.src.user.model.Follower
 com/example/demo/src/user/UserService.java
  com.example.demo.src.user.UserService
 com/example/demo/config/BaseException.java
@@ -64,6 +68,8 @@ com/example/demo/src/user/model/PostUserReq.java
  com.example.demo.src.user.model.PostUserReq
 com/example/demo/src/restaurant/model/GetReviewsRes.java
  com.example.demo.src.restaurant.model.GetReviewsRes
+com/example/demo/src/restaurant/model/PostStoreReq.java
+ com.example.demo.src.restaurant.model.PostStoreReq
 com/example/demo/src/user/model/PostLoginRes.java
  com.example.demo.src.user.model.PostLoginRes
 com/example/demo/src/restaurant/model/PostHeartReq.java
@@ -130,6 +136,8 @@ com/example/demo/utils/JwtService.java
  com.example.demo.utils.JwtService
 com/example/demo/src/user/UserProvider.java
  com.example.demo.src.user.UserProvider
+com/example/demo/src/restaurant/model/PatchWentReq.java
+ com.example.demo.src.restaurant.model.PatchWentReq
 com/example/demo/src/review/ReviewService.java
  com.example.demo.src.review.ReviewService
 com/example/demo/src/restaurant/model/GetRestaurantRes.java

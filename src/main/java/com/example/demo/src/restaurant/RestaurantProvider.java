@@ -104,4 +104,8 @@ public class RestaurantProvider {
         return getEatdeal;
 
     }
+
+    public int checkStatus(int userIdx, int wentIdx) {
+        return restaurantDao.checkStatus(userIdx, wentIdx);}
+    public int checkWentExist(int wentIdx) {return restaurantDao.checkWentExist(wentIdx);}
 }

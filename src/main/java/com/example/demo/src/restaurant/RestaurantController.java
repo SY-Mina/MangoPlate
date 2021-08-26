@@ -17,6 +17,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -231,6 +232,90 @@ public class RestaurantController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+    /**
+     * 식당 가봤어요 삭제 API
+     * [POST] /stores/went/:wentIdx/status
+     * @return BaseResponse<String>
+     */
+    // Path-variable
+    @ResponseBody
+    @PatchMapping("/went/{wentIdx}/status") // (GET) 127.0.0.1:9000/app/stores/went
+    public BaseResponse<String> patchWentStatus(@PathVariable("wentIdx")int wentIdx) throws BaseException {
+        try{
+            if (restaurantProvider.checkWentExist(wentIdx) == 0) {
+                return new BaseResponse<>(GET_WENT_EMPTY);
+            }
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+
+                if (restaurantProvider.checkStatus(userIdx, wentIdx)==0) {
+                    return new BaseResponse<>(PATCH_USER_INVALID_STATUS);
+                }
+                restaurantService.patchWentStatus( wentIdx);
+                String result ="T";
+                return new BaseResponse<>(result);
+            }
+
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+    /**
+     * 식당 가봤어요 수정 API
+     * [POST] /stores/went/:wentIdx
+     * @return BaseResponse<String>
+     */
+    // Path-variable
+    @ResponseBody
+    @PatchMapping("/went/{wentIdx}") // (GET) 127.0.0.1:9000/app/stores/went
+    public BaseResponse<String> patchWent(@PathVariable("wentIdx")int wentIdx, @RequestBody PatchWentReq patchWentReq) throws BaseException {
+        try{
+            if (restaurantProvider.checkWentExist(wentIdx) == 0) {
+                return new BaseResponse<>(GET_WENT_EMPTY);
+            }
+            if (jwtService.getJwt()==null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            if (patchWentReq.getContent().length()>50) {
+                return new BaseResponse<>(POST_STORES_INVALID);
+            }
+            else {
+                int userIdx = jwtService.getUserIdx();
+
+                if (restaurantProvider.checkStatus(userIdx, wentIdx)==0) {
+                    return new BaseResponse<>(PATCH_USER_INVALID);
+                }
+                if (patchWentReq.getContent().length()<1) {
+                    if (patchWentReq.getPublicStatus().length()<1) {
+                        String result ="수정한게 없습니다.";
+                        return new BaseResponse<>(result);
+                    }
+                    else {
+                        restaurantService.patchWentPublic(wentIdx, patchWentReq.getPublicStatus());
+                    }
+                }
+                else {
+                    if (patchWentReq.getPublicStatus().length()<1) {
+                        restaurantService.patchWentContent(wentIdx, patchWentReq.getContent());
+                    }
+                    else {
+                        restaurantService.patchWent(wentIdx, patchWentReq.getContent(),patchWentReq.getPublicStatus());
+                    }
+                }
+
+                String result ="T";
+                return new BaseResponse<>(result);
+            }
+
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
     /**
      * 식당 검색하기 API
@@ -251,4 +336,6 @@ public class RestaurantController {
         }
 
     }
+
+
 }
